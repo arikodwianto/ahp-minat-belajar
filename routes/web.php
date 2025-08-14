@@ -1,62 +1,88 @@
 <?php
+
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OperatorController;
 use App\Http\Controllers\GuruController;
 use Illuminate\Support\Facades\Route;
-
 use Illuminate\Support\Facades\Auth;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
 
+// Root langsung ke login
+Route::get('/', function () {
+    return redirect('/login');
+});
 
+// Route dashboard untuk redirect setelah login sesuai role
 Route::get('/dashboard', function () {
-    if (Auth::check()) {
-        // arahkan sesuai role
-        if (Auth::user()->role === 'operator') {
-            return redirect()->route('operator.dashboard');
-        } elseif (Auth::user()->role === 'guru') {
-            return redirect()->route('guru.dashboard');
-        }
-    }
-    return redirect('/login'); // fallback jika belum login
-})->middleware('auth')->name('dashboard');
-
-
-
-
-// Redirect setelah login sesuai role
-Route::get('/redirect-after-login', function () {
     if (auth()->user()->role === 'operator') {
         return redirect()->route('operator.dashboard');
     } elseif (auth()->user()->role === 'guru') {
         return redirect()->route('guru.dashboard');
     }
-    abort(403);
-})->middleware('auth')->name('redirect.after.login');
+    abort(403); // jika role tidak dikenali
+})->middleware('auth')->name('dashboard');
 
-// Dashboard Operator
+/*
+|--------------------------------------------------------------------------
+| Operator Routes
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth', 'role:operator'])->group(function () {
+
+    // Dashboard Operator
     Route::get('/operator/dashboard', [OperatorController::class, 'dashboard'])->name('operator.dashboard');
+
+    // ===== CRUD Guru =====
+    Route::get('/operator/guru', [OperatorController::class, 'indexGuru'])->name('operator.guru.index');
+    Route::get('/operator/guru/create', [OperatorController::class, 'createGuru'])->name('operator.guru.create');
+    Route::post('/operator/guru/store', [OperatorController::class, 'storeGuru'])->name('operator.guru.store');
+    Route::get('/operator/guru/{id}/edit', [OperatorController::class, 'editGuru'])->name('operator.guru.edit');
+    Route::put('/operator/guru/{id}', [OperatorController::class, 'updateGuru'])->name('operator.guru.update');
+    Route::delete('/operator/guru/{id}', [OperatorController::class, 'destroyGuru'])->name('operator.guru.destroy');
+
+    // ===== CRUD Kriteria =====
+    Route::get('/operator/kriteria', [OperatorController::class, 'indexKriteria'])->name('operator.kriteria.index');
+    Route::get('/operator/kriteria/create', [OperatorController::class, 'createKriteria'])->name('operator.kriteria.create');
+    Route::post('/operator/kriteria/store', [OperatorController::class, 'storeKriteria'])->name('operator.kriteria.store');
+    Route::get('/operator/kriteria/{id}/edit', [OperatorController::class, 'editKriteria'])->name('operator.kriteria.edit');
+    Route::put('/operator/kriteria/{id}', [OperatorController::class, 'updateKriteria'])->name('operator.kriteria.update');
+    Route::delete('/operator/kriteria/{id}', [OperatorController::class, 'destroyKriteria'])->name('operator.kriteria.destroy');
+
+    // ===== CRUD Data Siswa =====
+    Route::get('/operator/siswa', [OperatorController::class, 'indexSiswa'])->name('operator.siswa.index');
+    Route::get('/operator/siswa/create', [OperatorController::class, 'createSiswa'])->name('operator.siswa.create');
+    Route::post('/operator/siswa/store', [OperatorController::class, 'storeSiswa'])->name('operator.siswa.store');
+    Route::get('/operator/siswa/edit/{id}', [OperatorController::class, 'editSiswa'])->name('operator.siswa.edit');
+    Route::put('/operator/siswa/update/{id}', [OperatorController::class, 'updateSiswa'])->name('operator.siswa.update');
+    Route::delete('/operator/siswa/delete/{id}', [OperatorController::class, 'destroySiswa'])->name('operator.siswa.destroy');
+
 });
 
-// Dashboard Guru
+
+/*
+|--------------------------------------------------------------------------
+| Guru Routes
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth', 'role:guru'])->group(function () {
     Route::get('/guru/dashboard', [GuruController::class, 'dashboard'])->name('guru.dashboard');
 });
 
-// Route profile
+/*
+|--------------------------------------------------------------------------
+| Profile Routes
+|--------------------------------------------------------------------------
+*/
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-Route::middleware(['auth', 'role:operator'])->group(function () {
-    Route::get('/operator/dashboard', [OperatorController::class, 'dashboard'])->name('operator.dashboard');
-    Route::get('/operator/guru/create', [OperatorController::class, 'createGuru'])->name('operator.guru.create');
-    Route::post('/operator/guru/store', [OperatorController::class, 'storeGuru'])->name('operator.guru.store');
-});
-
-
+// Auth routes (login, register, password reset, etc.)
 require __DIR__.'/auth.php';
-
