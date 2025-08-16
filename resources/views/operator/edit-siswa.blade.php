@@ -59,6 +59,7 @@
                             <div class="col-md-4">
                                 <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
                                 <select name="jenis_kelamin" id="jenis_kelamin" class="form-select" required>
+                                    <option value="">-- Pilih --</option>
                                     <option value="Laki-laki" {{ old('jenis_kelamin', $siswa->jenis_kelamin) == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
                                     <option value="Perempuan" {{ old('jenis_kelamin', $siswa->jenis_kelamin) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                                 </select>
@@ -83,6 +84,40 @@
                                 <label for="alamat" class="form-label">Alamat</label>
                                 <textarea name="alamat" id="alamat" class="form-control" rows="2" required>{{ old('alamat', $siswa->alamat) }}</textarea>
                             </div>
+
+                            <div class="col-md-4">
+                                <label for="telepon" class="form-label">Telepon</label>
+                                <input type="text" name="telepon" id="telepon" class="form-control" value="{{ old('telepon', $siswa->telepon) }}">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" name="email" id="email" class="form-control" value="{{ old('email', $siswa->email) }}">
+                            </div>
+
+                           <div class="col-md-4">
+    <label for="kelas_id" class="form-label">Kelas</label>
+    <select name="kelas_id" id="kelas_id" class="form-select" required>
+        <option value="">-- Pilih Kelas --</option>
+        @foreach($kelas as $k)
+            <option value="{{ $k->id }}" 
+                {{ old('kelas_id', $siswa->kelas_id ?? '') == $k->id ? 'selected' : '' }}>
+                {{ $k->nama_kelas }} @if($k->jurusan) ({{ $k->jurusan }}) @endif
+            </option>
+        @endforeach
+    </select>
+</div>
+
+
+                            <div class="col-md-4">
+                                <label for="tahun_masuk" class="form-label">Tahun Masuk</label>
+                                <input type="text" name="tahun_masuk" id="tahun_masuk" class="form-control" value="{{ old('tahun_masuk', $siswa->tahun_masuk) }}">
+                            </div>
+
+                            <div class="col-md-8">
+                                <label for="sekolah_asal" class="form-label">Sekolah Asal</label>
+                                <input type="text" name="sekolah_asal" id="sekolah_asal" class="form-control" value="{{ old('sekolah_asal', $siswa->sekolah_asal) }}">
+                            </div>
                         </div>
 
                         <div class="mt-4 d-flex justify-content-end gap-2">
@@ -90,7 +125,7 @@
                                 <i class="bi bi-arrow-left me-1"></i> Kembali
                             </a>
                             <button type="submit" class="btn btn-success">
-                                <i class="bi bi-save me-1"></i> Simpan Perubahan
+                                <i class="bi bi-save me-1"></i> Update
                             </button>
                         </div>
                     </form>

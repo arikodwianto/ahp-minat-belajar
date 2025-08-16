@@ -182,15 +182,15 @@
       <a href="#" class="nav-link">
         <i class="nav-icon bi bi-list-check text-danger"></i>
         <p>
-          Data Kriteria
+          Data Kelas
           <i class="nav-arrow bi bi-chevron-right"></i>
         </p>
       </a>
       <ul class="nav nav-treeview">
         <li class="nav-item">
-          <a href="{{ route('operator.kriteria.index') }}" class="nav-link">
+          <a href="{{ route('operator.kelas.index') }}" class="nav-link">
             <i class="nav-icon bi bi-dot text-muted"></i>
-            <p>Daftar Kriteria</p>
+            <p>Daftar Kelas</p>
           </a>
         </li>
       </ul>

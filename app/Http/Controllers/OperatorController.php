@@ -7,6 +7,7 @@ use App\Models\Kriteria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Siswa;
+use App\Models\Kelas;
 
 
 class OperatorController extends Controller
@@ -145,93 +146,113 @@ class OperatorController extends Controller
         return redirect()->route('operator.kriteria.index')->with('success', 'Kriteria berhasil dihapus.');
     }
     // CRUD Siswa
-public function indexSiswa()
-{
-    $siswas = Siswa::all();
-    return view('operator.index-siswa', compact('siswas'));
+
+    // ================== CRUD SISWA ==================
+
+    public function indexSiswa()
+    {
+        $siswas = Siswa::with('kelas')->get();
+        return view('operator.index-siswa', compact('siswas'));
+    }
+
+    public function createSiswa()
+    {
+        $kelas = Kelas::all();
+        return view('operator.create-siswa', compact('kelas'));
+    }
+
+    public function storeSiswa(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'nis' => 'required|string|unique:siswas,nis',
+            'kelas_id' => 'required|exists:kelas,id',
+        ]);
+
+        Siswa::create($request->all());
+
+        return redirect()->route('operator.siswa.index')->with('success', 'Data siswa berhasil ditambahkan.');
+    }
+
+    public function editSiswa($id)
+    {
+        $siswa = Siswa::findOrFail($id);
+        $kelas = Kelas::all();
+        return view('operator.edit-siswa', compact('siswa', 'kelas'));
+    }
+
+    public function updateSiswa(Request $request, $id)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'nis' => 'required|string|unique:siswas,nis,' . $id,
+            'kelas_id' => 'required|exists:kelas,id',
+        ]);
+
+        $siswa = Siswa::findOrFail($id);
+        $siswa->update($request->all());
+
+        return redirect()->route('operator.siswa.index')->with('success', 'Data siswa berhasil diperbarui.');
+    }
+
+    public function destroySiswa($id)
+    {
+        $siswa = Siswa::findOrFail($id);
+        $siswa->delete();
+
+        return redirect()->route('operator.siswa.index')->with('success', 'Data siswa berhasil dihapus.');
+    }
+
+    // ================== CRUD KELAS ==================
+
+    public function indexKelas()
+    {
+        $kelas = Kelas::all();
+        return view('operator.index-kelas', compact('kelas'));
+    }
+
+    public function createKelas()
+    {
+        return view('operator.create-kelas');
+    }
+
+    public function storeKelas(Request $request)
+    {
+        $request->validate([
+            'nama_kelas' => 'required|string|max:255|unique:kelas,nama_kelas',
+        ]);
+
+        Kelas::create($request->all());
+
+        return redirect()->route('operator.kelas.index')->with('success', 'Data kelas berhasil ditambahkan.');
+    }
+
+    public function editKelas($id)
+    {
+        $kelas = Kelas::findOrFail($id);
+        return view('operator.edit-kelas', compact('kelas'));
+    }
+
+    public function updateKelas(Request $request, $id)
+    {
+        $request->validate([
+            'nama_kelas' => 'required|string|max:255|unique:kelas,nama_kelas,' . $id,
+        ]);
+
+        $kelas = Kelas::findOrFail($id);
+        $kelas->update($request->all());
+
+        return redirect()->route('operator.kelas.index')->with('success', 'Data kelas berhasil diperbarui.');
+    }
+
+    public function destroyKelas($id)
+    {
+        $kelas = Kelas::findOrFail($id);
+        $kelas->delete();
+
+        return redirect()->route('operator.kelas.index')->with('success', 'Data kelas berhasil dihapus.');
+    }
 }
 
-public function createSiswa()
-{
-    return view('operator.create-siswa');
-}
-
-public function storeSiswa(Request $request)
-{
-    $request->validate([
-        'nama' => 'required|string|max:255',
-        'nis' => 'required|string|unique:siswas,nis',
-        'jenis_kelamin' => 'required',
-        'tanggal_lahir' => 'required|date',
-        'tempat_lahir' => 'required|string|max:255',
-        'agama' => 'required|string|max:50',
-        'alamat' => 'required|string|max:500',
-    ]);
-
-    Siswa::create($request->only([
-        'nama',
-        'nis',
-        'jenis_kelamin',
-        'tanggal_lahir',
-        'tempat_lahir',
-        'agama',
-        'alamat',
-        'telepon',
-        'email',
-        'kelas',
-        'tahun_masuk',
-        'sekolah_asal',
-    ]));
-
-    return redirect()->route('operator.siswa.index')->with('success', 'Siswa berhasil ditambahkan.');
-}
-
-public function updateSiswa(Request $request, $id)
-{
-    $siswa = Siswa::findOrFail($id);
-
-    $request->validate([
-        'nama' => 'required|string|max:255',
-        'nis' => 'required|string|unique:siswas,nis,' . $siswa->id,
-        'jenis_kelamin' => 'required',
-        'tanggal_lahir' => 'required|date',
-        'tempat_lahir' => 'required|string|max:255',
-        'agama' => 'required|string|max:50',
-        'alamat' => 'required|string|max:500',
-    ]);
-
-    $siswa->update($request->only([
-        'nama',
-        'nis',
-        'jenis_kelamin',
-        'tanggal_lahir',
-        'tempat_lahir',
-        'agama',
-        'alamat',
-        'telepon',
-        'email',
-        'kelas',
-        'tahun_masuk',
-        'sekolah_asal',
-    ]));
-
-    return redirect()->route('operator.siswa.index')->with('success', 'Siswa berhasil diperbarui.');
-}
-
-public function editSiswa($id)
-{
-    $siswa = Siswa::findOrFail($id);
-    return view('operator.edit-siswa', compact('siswa'));
-}
 
 
-
-public function destroySiswa($id)
-{
-    $siswa = Siswa::findOrFail($id);
-    $siswa->delete();
-
-    return redirect()->route('operator.siswa.index')->with('success', 'Siswa berhasil dihapus.');
-}
-
-}

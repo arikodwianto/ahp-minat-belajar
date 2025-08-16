@@ -54,12 +54,23 @@ Route::middleware(['auth', 'role:operator'])->group(function () {
     Route::delete('/operator/kriteria/{id}', [OperatorController::class, 'destroyKriteria'])->name('operator.kriteria.destroy');
 
     // ===== CRUD Data Siswa =====
-    Route::get('/operator/siswa', [OperatorController::class, 'indexSiswa'])->name('operator.siswa.index');
-    Route::get('/operator/siswa/create', [OperatorController::class, 'createSiswa'])->name('operator.siswa.create');
-    Route::post('/operator/siswa/store', [OperatorController::class, 'storeSiswa'])->name('operator.siswa.store');
-    Route::get('/operator/siswa/edit/{id}', [OperatorController::class, 'editSiswa'])->name('operator.siswa.edit');
-    Route::put('/operator/siswa/update/{id}', [OperatorController::class, 'updateSiswa'])->name('operator.siswa.update');
-    Route::delete('/operator/siswa/delete/{id}', [OperatorController::class, 'destroySiswa'])->name('operator.siswa.destroy');
+  
+
+// CRUD Siswa
+Route::get('/operator/siswa', [OperatorController::class, 'indexSiswa'])->name('operator.siswa.index');
+Route::get('/operator/siswa/create', [OperatorController::class, 'createSiswa'])->name('operator.siswa.create');
+Route::post('/operator/siswa/store', [OperatorController::class, 'storeSiswa'])->name('operator.siswa.store');
+Route::get('/operator/siswa/edit/{id}', [OperatorController::class, 'editSiswa'])->name('operator.siswa.edit');
+Route::put('/operator/siswa/update/{id}', [OperatorController::class, 'updateSiswa'])->name('operator.siswa.update');
+Route::delete('/operator/siswa/delete/{id}', [OperatorController::class, 'destroySiswa'])->name('operator.siswa.destroy');
+
+// CRUD Kelas
+Route::get('/operator/kelas', [OperatorController::class, 'indexKelas'])->name('operator.kelas.index');
+Route::get('/operator/kelas/create', [OperatorController::class, 'createKelas'])->name('operator.kelas.create');
+Route::post('/operator/kelas/store', [OperatorController::class, 'storeKelas'])->name('operator.kelas.store');
+Route::get('/operator/kelas/edit/{id}', [OperatorController::class, 'editKelas'])->name('operator.kelas.edit');
+Route::put('/operator/kelas/update/{id}', [OperatorController::class, 'updateKelas'])->name('operator.kelas.update');
+Route::delete('/operator/kelas/delete/{id}', [OperatorController::class, 'destroyKelas'])->name('operator.kelas.destroy');
 
 });
 

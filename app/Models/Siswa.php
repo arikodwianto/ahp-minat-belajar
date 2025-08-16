@@ -19,8 +19,14 @@ class Siswa extends Model
         'alamat',
         'telepon',
         'email',
-        'kelas',
+        'kelas_id', // ubah dari 'kelas' jadi 'kelas_id'
         'tahun_masuk',
         'sekolah_asal',
     ];
+
+    // Relasi ke model Kelas
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class);
+    }
 }

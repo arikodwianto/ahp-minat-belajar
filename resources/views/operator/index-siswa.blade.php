@@ -23,7 +23,7 @@
     <div class="app-content">
         <div class="container-fluid">
 
-            <!-- Tombol Tambah Siswa di luar card -->
+            <!-- Tombol Tambah Siswa -->
             <div class="mb-3">
                 <a href="{{ route('operator.siswa.create') }}" class="btn btn-success">
                     <i class="bi bi-plus-circle me-1"></i> Tambah Siswa
@@ -67,11 +67,12 @@
                                             <td>{{ $siswa->tempat_lahir }}</td>
                                             <td>{{ $siswa->agama }}</td>
                                             <td>{{ $siswa->alamat }}</td>
-                                            <td>{{ $siswa->telepon }}</td>
-                                            <td>{{ $siswa->email }}</td>
-                                            <td>{{ $siswa->kelas }}</td>
-                                            <td>{{ $siswa->tahun_masuk }}</td>
-                                            <td>{{ $siswa->sekolah_asal }}</td>
+                                            <td>{{ $siswa->telepon ?? '-' }}</td>
+                                            <td>{{ $siswa->email ?? '-' }}</td>
+                                            <td>{{ $siswa->kelas->nama_kelas }} @if($siswa->kelas->jurusan) ({{ $siswa->kelas->jurusan }}) @endif</td>
+
+                                            <td>{{ $siswa->tahun_masuk ?? '-' }}</td>
+                                            <td>{{ $siswa->sekolah_asal ?? '-' }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('operator.siswa.edit', $siswa->id) }}" class="btn btn-sm btn-warning mb-1">
                                                     <i class="bi bi-pencil-square"></i> Edit
