@@ -96,7 +96,7 @@ class OperatorController extends Controller
     // generate kode otomatis berdasarkan data terakhir
     $lastKriteria = Kriteria::orderBy('id', 'desc')->first();
     $nextNumber = $lastKriteria ? $lastKriteria->id + 1 : 1;
-    $kode = 'K' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT); // misal K01, K02
+    $kode = 'C' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT); // misal K01, K02
 
     Kriteria::create([
         'nama' => $request->nama,
@@ -215,6 +215,13 @@ public function updateSiswa(Request $request, $id)
 
     return redirect()->route('operator.siswa.index')->with('success', 'Siswa berhasil diperbarui.');
 }
+
+public function editSiswa($id)
+{
+    $siswa = Siswa::findOrFail($id);
+    return view('operator.edit-siswa', compact('siswa'));
+}
+
 
 
 public function destroySiswa($id)
