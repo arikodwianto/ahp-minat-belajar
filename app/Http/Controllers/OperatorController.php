@@ -84,7 +84,7 @@ class OperatorController extends Controller
     // ===== CRUD Kriteria =====
     public function createKriteria()
     {
-        return view('operator.create-kriteria');
+        return view('operator.kriteria.create-kriteria');
     }
 
   public function storeKriteria(Request $request)
@@ -110,30 +110,32 @@ class OperatorController extends Controller
     public function indexKriteria()
     {
         $kriterias = Kriteria::all();
-        return view('operator.index-kriteria', compact('kriterias'));
+        return view('operator.kriteria.index-kriteria', compact('kriterias'));
     }
 
     public function editKriteria($id)
     {
         $kriteria = Kriteria::findOrFail($id);
-        return view('operator.edit-kriteria', compact('kriteria'));
+        return view('operator.kriteria.edit-kriteria', compact('kriteria'));
     }
 
-    public function updateKriteria(Request $request, $id)
-    {
-        $kriteria = Kriteria::findOrFail($id);
+  public function updateKriteria(Request $request, $id)
+{
+    $kriteria = Kriteria::findOrFail($id);
 
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'kode' => 'required|string|max:10|unique:kriterias,kode,' . $kriteria->id,
-        ]);
+    $request->validate([
+        'nama' => 'required|string|max:255',
+        // kode tidak divalidasi karena tidak boleh diubah
+    ]);
 
-        $kriteria->nama = $request->nama;
-        $kriteria->kode = $request->kode;
-        $kriteria->save();
+    $kriteria->nama = $request->nama;
+    // kode tidak diubah
+    $kriteria->save();
 
-        return redirect()->route('operator.kriteria.index')->with('success', 'Kriteria berhasil diperbarui.');
-    }
+    return redirect()->route('operator.kriteria.index')
+        ->with('success', 'Kriteria berhasil diperbarui.');
+}
+
 
     public function destroyKriteria($id)
     {

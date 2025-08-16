@@ -66,8 +66,7 @@
                 <i class="bi bi-list"></i>
               </a>
             </li>
-            <li class="nav-item d-none d-md-block"><a href="{{ route('operator.dashboard') }}" class="nav-link">Home</a></li>
-            <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
+           
           </ul>
           <!--end::Start Navbar Links-->
           <!--begin::End Navbar Links-->
@@ -83,50 +82,16 @@
             </li>
             <!--end::Fullscreen Toggle-->
             <!--begin::User Menu Dropdown-->
-            <li class="nav-item dropdown user-menu">
-              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                <img
-                  src="{{ asset('lte/dist/assets/img/user2-160x160.jpg') }}"
-                  class="user-image rounded-circle shadow"
-                  alt="User Image"
-                />
-                <span class="d-none d-md-inline">Alexander Pierce</span>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                <!--begin::User Image-->
-                <li class="user-header text-bg-primary">
-  <img
-    src="{{ asset('assets/img/user2-160x160.jpg') }}"
-    class="rounded-circle shadow"
-    alt="User Image"
-  />
+           <li class="nav-item dropdown user-menu">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+    <i class="bi bi-person-circle fs-4 me-2"></i>
+    <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
+  </a>
 </li>
 
-                  <p>
-                    Alexander Pierce - Web Developer
-                    <small>Member since Nov. 2023</small>
-                  </p>
-                </li>
                 <!--end::User Image-->
                 <!--begin::Menu Body-->
-                <li class="user-body">
-                  <!--begin::Row-->
-                  <div class="row">
-                    <div class="col-4 text-center"><a href="#">Followers</a></div>
-                    <div class="col-4 text-center"><a href="#">Sales</a></div>
-                    <div class="col-4 text-center"><a href="#">Friends</a></div>
-                  </div>
-                  <!--end::Row-->
-                </li>
-                <!--end::Menu Body-->
-                <!--begin::Menu Footer-->
-                <li class="user-footer">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
-                  <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
-                </li>
-                <!--end::Menu Footer-->
-              </ul>
-            </li>
+               
             <!--end::User Menu Dropdown-->
           </ul>
           <!--end::End Navbar Links-->
@@ -158,48 +123,89 @@
         <!--begin::Sidebar Wrapper-->
         
         <div class="sidebar-wrapper">
-          <nav class="mt-2">
-            <!--begin::Sidebar Menu-->
-            
-            <ul
-              class="nav sidebar-menu flex-column"
-              data-lte-toggle="treeview"
-              role="navigation"
-              aria-label="Main navigation"
-              data-accordion="false"
-              id="navigation"
-            >
-              <li class="nav-item menu-open">
-                
-                  
-                
-              </li>
-              <li class="nav-header">EXAMPLES</li>
-              <li class="nav-item">
-                <a href="{{ route('operator.guru.index') }}" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Daftar Guru</p>
-                </a>
-              </li>
-              <li class="nav-header">EXAMPLES</li>
-              <li class="nav-item">
-                <a href="{{ route('operator.siswa.index') }}" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Daftar Siswa</p>
-                </a>
-              </li>
-              <li class="nav-header">EXAMPLES</li>
-              <li class="nav-item">
-                <a href="{{ route('operator.kriteria.index') }}" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Daftar Kriteria</p>
-                </a>
-              </li>
-              
-                  
-           
-            <!--end::Sidebar Menu-->
-          </nav>
+         <nav class="mt-2">
+  <!-- Sidebar Menu -->
+  <ul
+    class="nav sidebar-menu flex-column"
+    data-lte-toggle="treeview"
+    role="navigation"
+    aria-label="Main navigation"
+    data-accordion="false"
+    id="navigation"
+  >
+    <li class="nav-header">Dashboard</li>
+    <li class="nav-item border-bottom">
+      <a href="{{ route('operator.dashboard') }}" class="nav-link">
+        <i class="nav-icon bi bi-house-door-fill text-primary"></i>
+        <p>Home</p>
+      </a>
+    </li>
+
+    <li class="nav-header">Data Master</li>
+    <li class="nav-item border-bottom">
+      <a href="#" class="nav-link">
+        <i class="nav-icon bi bi-people-fill text-success"></i>
+        <p>
+          Data Siswa
+          <i class="nav-arrow bi bi-chevron-right"></i>
+        </p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="{{ route('operator.siswa.index') }}" class="nav-link">
+            <i class="nav-icon bi bi-dot text-muted"></i>
+            <p>Daftar Siswa</p>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <li class="nav-item border-bottom">
+      <a href="#" class="nav-link">
+        <i class="nav-icon bi bi-person-badge-fill text-warning"></i>
+        <p>
+          Data Guru
+          <i class="nav-arrow bi bi-chevron-right"></i>
+        </p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="{{ route('operator.guru.index') }}" class="nav-link">
+            <i class="nav-icon bi bi-dot text-muted"></i>
+            <p>Daftar Guru</p>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <li class="nav-item border-bottom">
+      <a href="#" class="nav-link">
+        <i class="nav-icon bi bi-list-check text-danger"></i>
+        <p>
+          Data Kriteria
+          <i class="nav-arrow bi bi-chevron-right"></i>
+        </p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="{{ route('operator.kriteria.index') }}" class="nav-link">
+            <i class="nav-icon bi bi-dot text-muted"></i>
+            <p>Daftar Kriteria</p>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <li class="nav-header">Seleksi AHP</li>
+    <li class="nav-item border-bottom">
+      <a href="{{ route('operator.kriteria.index') }}" class="nav-link">
+        <i class="nav-icon bi bi-diagram-3-fill text-info"></i>
+        <p>Daftar Kriteria</p>
+      </a>
+    </li>
+  </ul>
+</nav>
+
         </div>
         <!--end::Sidebar Wrapper-->
         
@@ -461,6 +467,39 @@
       sparkline3.render();
     </script>
     <!--end::Script-->
+    <!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
+
+<!-- jQuery & DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+<script>
+$(document).ready(function () {
+    $.fn.dataTable.ext.errMode = 'none'; // matikan alert warning
+    $('#dataTable').DataTable({
+        destroy: true,
+        pageLength: 10,
+        lengthMenu: [5, 10, 25, 50],
+        language: { 
+            search: "Cari:",
+            lengthMenu: "Tampilkan _MENU_ data",
+            info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+            paginate: {
+                first: "Awal",
+                last: "Akhir",
+              next: "Berikutnya", 
+                previous: "Sebelumnya"
+            },
+            zeroRecords: "Data tidak ditemukan"
+        }
+    });
+});
+</script>
+
+
   </body>
+  @stack('scripts')
+
   <!--end::Body-->
 </html>

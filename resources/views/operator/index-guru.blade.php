@@ -44,7 +44,7 @@
                 <div class="card-body p-3">
                     @if ($gurus->count())
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover align-middle">
+                            <table class="table table-bordered table-striped table-hover align-middle" id="dataTable">
                                 <thead class="table-primary">
                                     <tr>
                                         <th>No</th>
@@ -85,3 +85,4 @@
     </div>
 </main>
 @endsection
+
