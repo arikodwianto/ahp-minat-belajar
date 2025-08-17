@@ -33,7 +33,12 @@
       href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css"
       crossorigin="anonymous"
     />
-
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <link
       rel="stylesheet"
@@ -196,13 +201,23 @@
       </ul>
     </li>
 
-    <li class="nav-header">Seleksi AHP</li>
-    <li class="nav-item border-bottom">
-      <a href="{{ route('operator.kriteria.index') }}" class="nav-link">
-        <i class="nav-icon bi bi-diagram-3-fill text-info"></i>
-        <p>Daftar Kriteria</p>
-      </a>
-    </li>
+   <li class="nav-header">Seleksi AHP</li>
+
+<li class="nav-item border-bottom">
+  <a href="{{ route('operator.kriteria.index') }}" class="nav-link">
+    <i class="nav-icon bi bi-list-check text-info"></i> <!-- Daftar Kriteria -->
+    <p>Daftar Kriteria</p>
+  </a>
+</li>
+
+<li class="nav-item border-bottom">
+  <a href="{{ route('operator.kriteria.ahp') }}" class="nav-link">
+    <i class="nav-icon bi bi-calculator text-info"></i> <!-- Perhitungan Kriteria -->
+    <p>Perhitungan Kriteria</p>
+  </a>
+</li>
+
+
   </ul>
 </nav>
 
@@ -212,11 +227,18 @@
       </aside>
       <!-- Main Content -->
     <main class="container">
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+        @if (session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '{{ session("success") }}',
+        timer: 2000,
+        showConfirmButton: false
+    });
+</script>
+@endif
+
 
         @yield('content')
     </main>
@@ -362,6 +384,7 @@
       );
       sales_chart.render();
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- jsvectormap -->
     <script
       src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"

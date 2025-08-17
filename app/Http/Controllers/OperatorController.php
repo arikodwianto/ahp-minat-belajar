@@ -145,6 +145,61 @@ class OperatorController extends Controller
 
         return redirect()->route('operator.kriteria.index')->with('success', 'Kriteria berhasil dihapus.');
     }
+
+// Seleksi AHP
+    public function ahpKriteria()
+{
+    $kriterias = Kriteria::all();
+    $n = count($kriterias);
+
+    // Matriks perbandingan berpasangan default (identitas)
+    $matriks = [];
+    for ($i = 0; $i < $n; $i++) {
+        for ($j = 0; $j < $n; $j++) {
+            $matriks[$i][$j] = ($i == $j) ? 1 : 0;
+        }
+    }
+
+    return view('operator.kriteria.ahp-kriteria', compact('kriterias', 'matriks'));
+}
+
+// Simpan perhitungan AHP
+public function hitungAHP(Request $request)
+{
+    $kriterias = Kriteria::all();
+    $n = count($kriterias);
+
+    $matriks = [];
+    for ($i = 0; $i < $n; $i++) {
+        for ($j = 0; $j < $n; $j++) {
+            $matriks[$i][$j] = $request->input("matriks.$i.$j");
+        }
+    }
+
+    // Hitung bobot kriteria (metode rata-rata normalisasi)
+    $jumlah_kolom = [];
+    for ($j = 0; $j < $n; $j++) {
+        $jumlah_kolom[$j] = 0;
+        for ($i = 0; $i < $n; $i++) {
+            $jumlah_kolom[$j] += $matriks[$i][$j];
+        }
+    }
+
+    $matriks_normal = [];
+    for ($i = 0; $i < $n; $i++) {
+        for ($j = 0; $j < $n; $j++) {
+            $matriks_normal[$i][$j] = $matriks[$i][$j] / $jumlah_kolom[$j];
+        }
+    }
+
+    $bobot = [];
+    for ($i = 0; $i < $n; $i++) {
+        $bobot[$i] = array_sum($matriks_normal[$i]) / $n;
+    }
+
+    return view('operator.kriteria.hasil-ahp', compact('kriterias', 'bobot', 'matriks'));
+}
+
     // CRUD Siswa
 
     // ================== CRUD SISWA ==================

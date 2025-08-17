@@ -72,6 +72,11 @@ Route::get('/operator/kelas/edit/{id}', [OperatorController::class, 'editKelas']
 Route::put('/operator/kelas/update/{id}', [OperatorController::class, 'updateKelas'])->name('operator.kelas.update');
 Route::delete('/operator/kelas/delete/{id}', [OperatorController::class, 'destroyKelas'])->name('operator.kelas.destroy');
 
+// Seleksi AHP
+Route::get('operator/kriteria/ahp', [OperatorController::class, 'ahpKriteria'])->name('operator.kriteria.ahp');
+Route::post('operator/kriteria/ahp', [OperatorController::class, 'hitungAHP'])->name('operator.kriteria.hitung-ahp');
+
+
 });
 
 

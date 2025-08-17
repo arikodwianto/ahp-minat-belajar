@@ -23,13 +23,7 @@
     <div class="app-content">
         <div class="container-fluid">
 
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
+        
             <!-- Tombol Tambah Kriteria di luar card -->
             <div class="mb-3">
                 <a href="{{ route('operator.kriteria.create') }}" class="btn btn-success">
