@@ -47,7 +47,7 @@
                             <label for="nama" class="form-label">Nama Kriteria</label>
                             <input type="text" name="nama" id="nama" class="form-control" placeholder="Masukkan nama kriteria" required>
                         </div>
-                        <button type="submit" class="btn btn-success">
+                        <button type="submit" class="btn btn-success" id="btn-simpan">
                             <i class="bi bi-save me-1"></i> Simpan
                         </button>
                         <a href="{{ route('operator.kriteria.index') }}" class="btn btn-secondary">

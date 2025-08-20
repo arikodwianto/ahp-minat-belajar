@@ -243,21 +243,28 @@
         @yield('content')
     </main>
       <!--end::Sidebar-->
+<!--begin::Footer-->
+<footer class="app-footer bg-light border-top py-3">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    <!--begin::Copyright-->
+    <span class="text-muted">
+      &copy; <span id="year"></span> Sistem Informasi Sub Bagian Umum & Kepegawaian. 
+      All rights reserved.
+    </span>
+    <!--end::Copyright-->
 
-      <!--begin::Footer-->
-      <footer class="app-footer">
-        <!--begin::To the end-->
-        <div class="float-end d-none d-sm-inline">Anything you want</div>
-        <!--end::To the end-->
-        <!--begin::Copyright-->
-        <strong>
-          Copyright &copy; 2014-2025&nbsp;
-          <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
-        </strong>
-        All rights reserved.
-        <!--end::Copyright-->
-      </footer>
-      <!--end::Footer-->
+    <!--begin::Credits-->
+    <span class="text-muted">
+      Dikembangkan dengan ❤️ menggunakan 
+      <a href="https://adminlte.io" class="text-decoration-none fw-bold">AdminLTE</a>
+    </span>
+    <!--end::Credits-->
+  </div>
+</footer>
+<!--end::Footer-->
+
+
+
     </div>
     <!--end::App Wrapper-->
     <!--begin::Script-->
@@ -267,6 +274,10 @@
       crossorigin="anonymous"
     ></script>
     <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+    <script>
+  // otomatis update tahun copyright
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
       crossorigin="anonymous"
@@ -515,6 +526,49 @@ $(document).ready(function () {
                 previous: "Sebelumnya"
             },
             zeroRecords: "Data tidak ditemukan"
+        }
+    });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const forms = document.querySelectorAll('.form-hapus');
+
+    forms.forEach(form => {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault(); // cegah submit langsung
+
+            Swal.fire({
+                title: 'Apakah kamu yakin?',
+                text: "Data akan dihapus permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // submit kalau dikonfirmasi
+                }
+            });
+        });
+    });
+});
+</script>
+<script>
+document.getElementById('btn-simpan').addEventListener('click', function(e) {
+    Swal.fire({
+        title: 'Yakin ingin menyimpan data?',
+        text: "Data akan disimpan ke database.",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Simpan!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('form-simpan').submit();
         }
     });
 });

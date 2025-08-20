@@ -123,7 +123,7 @@
                             <a href="{{ route('operator.siswa.index') }}" class="btn btn-secondary">
                                 <i class="bi bi-arrow-left me-1"></i> Kembali
                             </a>
-                            <button type="submit" class="btn btn-success">
+                            <button type="submit" class="btn btn-success" id="btn-simpan">
                                 <i class="bi bi-save me-1"></i> Simpan
                             </button>
                         </div>

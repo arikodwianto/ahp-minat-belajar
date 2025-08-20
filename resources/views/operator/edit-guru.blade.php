@@ -73,7 +73,7 @@
                             <a href="{{ route('operator.guru.index') }}" class="btn btn-secondary me-2">
                                 <i class="bi bi-arrow-left"></i> Kembali
                             </a>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary" id="btn-simpan">
                                 <i class="bi bi-save me-1"></i> Simpan Perubahan
                             </button>
                         </div>

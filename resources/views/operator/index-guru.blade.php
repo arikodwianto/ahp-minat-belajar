@@ -61,13 +61,13 @@
                                             <td>{{ $user->email }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('operator.guru.edit', $user->id) }}" class="btn btn-sm btn-warning mb-1">
-                                                    <i class="bi bi-pencil-square"></i> Edit
+                                                    <i class="bi bi-pencil-square"></i> 
                                                 </a>
-                                                <form action="{{ route('operator.guru.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus guru ini?')">
+                                                <form action="{{ route('operator.guru.destroy', $user->id) }}" method="POST" class="d-inline form-hapus" >
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger mb-1">
-                                                        <i class="bi bi-trash"></i> Hapus
+                                                        <i class="bi bi-trash"></i> 
                                                     </button>
                                                 </form>
                                             </td>

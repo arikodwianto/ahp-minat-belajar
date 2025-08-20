@@ -13,10 +13,16 @@ use App\Models\Kelas;
 class OperatorController extends Controller
 {
     // Dashboard
-    public function dashboard()
-    {
-        return view('operator.dashboard');
-    }
+   public function dashboard()
+{
+    $jumlahGuru = User::where('role', 'guru')->count();
+    $jumlahSiswa = Siswa::count();
+    $jumlahKelas = Kelas::count();
+    $jumlahKriteria = Kriteria::count();
+
+    return view('operator.dashboard', compact('jumlahGuru', 'jumlahSiswa', 'jumlahKelas', 'jumlahKriteria'));
+}
+
 
     // ===== CRUD Guru =====
     public function createGuru()
@@ -257,6 +263,19 @@ public function hitungAHP(Request $request)
 
         return redirect()->route('operator.siswa.index')->with('success', 'Data siswa berhasil dihapus.');
     }
+    // Controller OperatorController.php
+
+public function showSiswa($id)
+{
+    // Ambil data siswa beserta relasi kelas
+    $siswa = Siswa::with('kelas')->findOrFail($id);
+
+    // Bisa juga menambahkan relasi lain jika ada, misal nilai, kehadiran, dll
+    // $siswa = Siswa::with(['kelas', 'nilai', 'kehadiran'])->findOrFail($id);
+
+    return view('operator.show-siswa', compact('siswa'));
+}
+
 
     // ================== CRUD KELAS ==================
 

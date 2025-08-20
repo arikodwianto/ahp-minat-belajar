@@ -44,12 +44,6 @@
                                         <th>Nama</th>
                                         <th>NIS</th>
                                         <th>Jenis Kelamin</th>
-                                        <th>Tanggal Lahir</th>
-                                        <th>Tempat Lahir</th>
-                                        <th>Agama</th>
-                                        <th>Alamat</th>
-                                        <th>Telepon</th>
-                                        <th>Email</th>
                                         <th>Kelas</th>
                                         <th>Tahun Masuk</th>
                                         <th>Sekolah Asal</th>
@@ -63,28 +57,31 @@
                                             <td>{{ $siswa->nama }}</td>
                                             <td>{{ $siswa->nis }}</td>
                                             <td>{{ $siswa->jenis_kelamin }}</td>
-                                            <td>{{ $siswa->tanggal_lahir }}</td>
-                                            <td>{{ $siswa->tempat_lahir }}</td>
-                                            <td>{{ $siswa->agama }}</td>
-                                            <td>{{ $siswa->alamat }}</td>
-                                            <td>{{ $siswa->telepon ?? '-' }}</td>
-                                            <td>{{ $siswa->email ?? '-' }}</td>
                                             <td>{{ $siswa->kelas->nama_kelas }} @if($siswa->kelas->jurusan) ({{ $siswa->kelas->jurusan }}) @endif</td>
 
                                             <td>{{ $siswa->tahun_masuk ?? '-' }}</td>
                                             <td>{{ $siswa->sekolah_asal ?? '-' }}</td>
-                                            <td class="text-center">
-                                                <a href="{{ route('operator.siswa.edit', $siswa->id) }}" class="btn btn-sm btn-warning mb-1">
-                                                    <i class="bi bi-pencil-square"></i> Edit
-                                                </a>
-                                                <form action="{{ route('operator.siswa.destroy', $siswa->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus siswa ini?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger mb-1">
-                                                        <i class="bi bi-trash"></i> Hapus
-                                                    </button>
-                                                </form>
-                                            </td>
+                                           <td class="">
+    <!-- Tombol Edit -->
+    <a href="{{ route('operator.siswa.edit', $siswa->id) }}" class="btn btn-sm btn-warning mb-1">
+        <i class="bi bi-pencil-fill"></i> 
+    </a>
+
+    <!-- Tombol Hapus -->
+    <form action="{{ route('operator.siswa.destroy', $siswa->id) }}" method="POST" class="d-inline form-hapus" >
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-sm btn-danger mb-1">
+            <i class="bi bi-trash-fill"></i>
+        </button>
+    </form>
+
+    <!-- Tombol Detail -->
+    <a href="{{ route('operator.siswa.show', $siswa->id) }}" class="btn btn-sm btn-info mb-1">
+        <i class="bi bi-eye-fill"></i> 
+    </a>
+</td>
+
                                         </tr>
                                     @endforeach
                                 </tbody>

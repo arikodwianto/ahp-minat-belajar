@@ -61,13 +61,13 @@
                                             <td>{{ $k->jurusan }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('operator.kelas.edit', $k->id) }}" class="btn btn-sm btn-warning mb-1">
-                                                    <i class="bi bi-pencil-square"></i> Edit
+                                                    <i class="bi bi-pencil-square"></i>
                                                 </a>
-                                                <form action="{{ route('operator.kelas.destroy', $k->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus kelas ini?')">
+                                                <form action="{{ route('operator.kelas.destroy', $k->id) }}" method="POST" class="d-inline form-hapus" >
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger mb-1">
-                                                        <i class="bi bi-trash"></i> Hapus
+                                                        <i class="bi bi-trash"></i> 
                                                     </button>
                                                 </form>
                                             </td>

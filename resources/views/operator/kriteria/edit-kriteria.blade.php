@@ -70,7 +70,7 @@
                             <a href="{{ route('operator.kriteria.index') }}" class="btn btn-secondary">
                                 <i class="bi bi-arrow-left-circle"></i> Kembali
                             </a>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary" id="btn-simpan">
                                 <i class="bi bi-save"></i> Simpan Perubahan
                             </button>
                         </div>

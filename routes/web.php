@@ -63,6 +63,8 @@ Route::post('/operator/siswa/store', [OperatorController::class, 'storeSiswa'])-
 Route::get('/operator/siswa/edit/{id}', [OperatorController::class, 'editSiswa'])->name('operator.siswa.edit');
 Route::put('/operator/siswa/update/{id}', [OperatorController::class, 'updateSiswa'])->name('operator.siswa.update');
 Route::delete('/operator/siswa/delete/{id}', [OperatorController::class, 'destroySiswa'])->name('operator.siswa.destroy');
+Route::get('operator/siswa/{id}', [OperatorController::class, 'showSiswa'])->name('operator.siswa.show');
+
 
 // CRUD Kelas
 Route::get('/operator/kelas', [OperatorController::class, 'indexKelas'])->name('operator.kelas.index');
