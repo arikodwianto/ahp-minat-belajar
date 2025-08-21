@@ -29,6 +29,16 @@ Route::get('/dashboard', function () {
 
 /*
 |--------------------------------------------------------------------------
+| IMport Excel Siswa
+|--------------------------------------------------------------------------
+*/
+Route::get('/operator/siswa/template', function () {
+    return response()->download(public_path('templates/template_siswa.xlsx'));
+})->name('operator.siswa.template');
+
+
+/*
+|--------------------------------------------------------------------------
 | Operator Routes
 |--------------------------------------------------------------------------
 */
@@ -64,6 +74,7 @@ Route::get('/operator/siswa/edit/{id}', [OperatorController::class, 'editSiswa']
 Route::put('/operator/siswa/update/{id}', [OperatorController::class, 'updateSiswa'])->name('operator.siswa.update');
 Route::delete('/operator/siswa/delete/{id}', [OperatorController::class, 'destroySiswa'])->name('operator.siswa.destroy');
 Route::get('operator/siswa/{id}', [OperatorController::class, 'showSiswa'])->name('operator.siswa.show');
+Route::post('/operator/siswa/import', [OperatorController::class, 'importSiswa'])->name('operator.siswa.import');
 
 
 // CRUD Kelas
@@ -75,8 +86,9 @@ Route::put('/operator/kelas/update/{id}', [OperatorController::class, 'updateKel
 Route::delete('/operator/kelas/delete/{id}', [OperatorController::class, 'destroyKelas'])->name('operator.kelas.destroy');
 
 // Seleksi AHP
-Route::get('operator/kriteria/ahp', [OperatorController::class, 'ahpKriteria'])->name('operator.kriteria.ahp');
-Route::post('operator/kriteria/ahp', [OperatorController::class, 'hitungAHP'])->name('operator.kriteria.hitung-ahp');
+Route::get('/operator/kriteria/ahp', [OperatorController::class, 'ahpKriteria'])->name('operator.kriteria.ahp');
+Route::post('/operator/kriteria/ahp/hitung', [OperatorController::class, 'hitungAHP'])->name('operator.kriteria.hitungAHP');
+Route::get('/operator/kriteria/hasil', [OperatorController::class, 'hasilAHP'])->name('operator.kriteria.hasilAHP');
 
 
 });

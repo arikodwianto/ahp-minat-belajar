@@ -74,10 +74,19 @@
                                 <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="form-control" value="{{ old('tanggal_lahir') }}" required>
                             </div>
 
-                            <div class="col-md-4">
-                                <label for="agama" class="form-label">Agama</label>
-                                <input type="text" name="agama" id="agama" class="form-control" value="{{ old('agama') }}" required>
-                            </div>
+                           <div class="col-md-4">
+    <label for="agama" class="form-label">Agama</label>
+    <select name="agama" id="agama" class="form-control" required>
+        <option value="">-- Pilih Agama --</option>
+        <option value="Islam" {{ old('agama') == 'Islam' ? 'selected' : '' }}>Islam</option>
+        <option value="Kristen Protestan" {{ old('agama') == 'Kristen Protestan' ? 'selected' : '' }}>Kristen Protestan</option>
+        <option value="Katolik" {{ old('agama') == 'Katolik' ? 'selected' : '' }}>Katolik</option>
+        <option value="Hindu" {{ old('agama') == 'Hindu' ? 'selected' : '' }}>Hindu</option>
+        <option value="Buddha" {{ old('agama') == 'Buddha' ? 'selected' : '' }}>Buddha</option>
+        <option value="Konghucu" {{ old('agama') == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
+    </select>
+</div>
+
 
                             <div class="col-md-8">
                                 <label for="alamat" class="form-label">Alamat</label>

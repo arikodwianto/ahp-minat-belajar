@@ -48,6 +48,7 @@
                                 <thead class="table-primary">
                                     <tr>
                                         <th>No</th>
+                                        <th>Id Kelas</th>
                                         <th>Nama Kelas</th>
                                         <th>Jurusan</th>
                                         <th class="text-center">Aksi</th>
@@ -57,6 +58,7 @@
                                     @foreach ($kelas as $index => $k)
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
+                                            <td>{{$k->id}}</td>
                                             <td>{{ $k->nama_kelas }}</td>
                                             <td>{{ $k->jurusan }}</td>
                                             <td class="text-center">

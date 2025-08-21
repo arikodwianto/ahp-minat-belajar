@@ -8,6 +8,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Siswa;
 use App\Models\Kelas;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\SiswaImport;
+
+use App\Models\HasilAHP;
+
 
 
 class OperatorController extends Controller
@@ -153,28 +160,36 @@ class OperatorController extends Controller
     }
 
 // Seleksi AHP
-    public function ahpKriteria()
+ // ===== Seleksi AHP =====
+public function ahpKriteria()
 {
     $kriterias = Kriteria::all();
     $n = count($kriterias);
 
-    // Matriks perbandingan berpasangan default (identitas)
-    $matriks = [];
-    for ($i = 0; $i < $n; $i++) {
-        for ($j = 0; $j < $n; $j++) {
-            $matriks[$i][$j] = ($i == $j) ? 1 : 0;
+    // Ambil matriks lama dari session (atau DB kalau mau)
+    $matriks = session('form_ahp.matriks', []);
+
+    // Kalau kosong, isi default identitas
+    if (empty($matriks)) {
+        for ($i = 0; $i < $n; $i++) {
+            for ($j = 0; $j < $n; $j++) {
+                $matriks[$i][$j] = ($i == $j) ? 1 : 1; // default 1
+            }
         }
     }
 
     return view('operator.kriteria.ahp-kriteria', compact('kriterias', 'matriks'));
 }
 
-// Simpan perhitungan AHP
 public function hitungAHP(Request $request)
 {
     $kriterias = Kriteria::all();
     $n = count($kriterias);
+   
+    $data = $request->input('matriks', []);
+    session(['form_ahp' => $data]);
 
+    // Ambil input matriks
     $matriks = [];
     for ($i = 0; $i < $n; $i++) {
         for ($j = 0; $j < $n; $j++) {
@@ -182,7 +197,7 @@ public function hitungAHP(Request $request)
         }
     }
 
-    // Hitung bobot kriteria (metode rata-rata normalisasi)
+    // Hitung jumlah tiap kolom
     $jumlah_kolom = [];
     for ($j = 0; $j < $n; $j++) {
         $jumlah_kolom[$j] = 0;
@@ -191,6 +206,7 @@ public function hitungAHP(Request $request)
         }
     }
 
+    // Normalisasi
     $matriks_normal = [];
     for ($i = 0; $i < $n; $i++) {
         for ($j = 0; $j < $n; $j++) {
@@ -198,13 +214,48 @@ public function hitungAHP(Request $request)
         }
     }
 
+    // Hitung bobot (rata-rata baris)
     $bobot = [];
     for ($i = 0; $i < $n; $i++) {
         $bobot[$i] = array_sum($matriks_normal[$i]) / $n;
     }
 
-    return view('operator.kriteria.hasil-ahp', compact('kriterias', 'bobot', 'matriks'));
+    // Simpan bobot ke tabel hasil_ahp
+    foreach ($kriterias as $i => $kriteria) {
+        \App\Models\HasilAHP::updateOrCreate(
+            ['kriteria_id' => $kriteria->id],
+            ['bobot' => $bobot[$i]]
+        );
+    }
+
+    // Redirect ke halaman hasil
+    return back()->with('success', 'Matriks berhasil disimpan.');
 }
+public function simpanForm(Request $request)
+{
+    $data = $request->validate([
+        'nama' => 'required|string',
+        'nilai' => 'required|numeric',
+    ]);
+
+    HasilAhp::updateOrCreate(
+        ['kriteria_id' => $request->kriteria_id],
+        ['nilai' => $request->nilai]
+    );
+
+    return back()->with('success', 'Data berhasil disimpan.');
+}
+
+
+// Menampilkan hasil AHP
+public function hasilAHP()
+{
+    $hasil = \App\Models\HasilAHP::with('kriteria')->get();
+    return view('operator.kriteria.hasil-ahp', compact('hasil'));
+}
+
+
+
 
     // CRUD Siswa
 
@@ -277,6 +328,27 @@ public function showSiswa($id)
 }
 
 
+ public function importSiswa(Request $request)
+{
+    $request->validate([
+        'file' => 'required|mimes:xlsx,xls,csv',
+    ]);
+
+    $import = new SiswaImport;
+    Excel::import($import, $request->file('file'));
+
+    $message = 'Import selesai.';
+
+    if (!empty($import->gagal)) {
+        $message .= "\nBaris gagal:\n" . implode("\n", $import->gagal);
+    } else {
+        $message .= ' Semua data berhasil diimport.';
+    }
+
+    return redirect()->route('operator.siswa.index')->with('alert', $message);
+}
+
+
     // ================== CRUD KELAS ==================
 
     public function indexKelas()
@@ -293,7 +365,8 @@ public function showSiswa($id)
     public function storeKelas(Request $request)
     {
         $request->validate([
-            'nama_kelas' => 'required|string|max:255|unique:kelas,nama_kelas',
+            'nama_kelas' => 'required|string|max:255',
+
         ]);
 
         Kelas::create($request->all());
@@ -310,7 +383,8 @@ public function showSiswa($id)
     public function updateKelas(Request $request, $id)
     {
         $request->validate([
-            'nama_kelas' => 'required|string|max:255|unique:kelas,nama_kelas,' . $id,
+            'nama_kelas' => 'required|string|max:255',
+
         ]);
 
         $kelas = Kelas::findOrFail($id);

@@ -216,6 +216,13 @@
     <p>Perhitungan Kriteria</p>
   </a>
 </li>
+<li class="nav-item border-bottom">
+  <a href="{{ route('operator.kriteria.hasilAHP') }}" class="nav-link">
+    <i class="nav-icon bi bi-calculator text-info"></i> <!-- Perhitungan Kriteria -->
+    <p>Hasil Perhitungan Kriteria</p>
+  </a>
+</li>
+
 
 
   </ul>
