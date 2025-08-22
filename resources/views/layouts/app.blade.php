@@ -202,26 +202,27 @@
     </li>
 
    <li class="nav-header">Seleksi AHP</li>
-
 <li class="nav-item border-bottom">
   <a href="{{ route('operator.kriteria.index') }}" class="nav-link">
-    <i class="nav-icon bi bi-list-check text-info"></i> <!-- Daftar Kriteria -->
+    <i class="nav-icon bi bi-list-task text-info"></i> <!-- Daftar Kriteria -->
     <p>Daftar Kriteria</p>
   </a>
 </li>
 
 <li class="nav-item border-bottom">
   <a href="{{ route('operator.kriteria.ahp') }}" class="nav-link">
-    <i class="nav-icon bi bi-calculator text-info"></i> <!-- Perhitungan Kriteria -->
+    <i class="nav-icon bi bi-sliders text-info"></i> <!-- Perbandingan / Perhitungan AHP -->
     <p>Perhitungan Kriteria</p>
   </a>
 </li>
+
 <li class="nav-item border-bottom">
   <a href="{{ route('operator.kriteria.hasilAHP') }}" class="nav-link">
-    <i class="nav-icon bi bi-calculator text-info"></i> <!-- Perhitungan Kriteria -->
+    <i class="nav-icon bi bi-bar-chart-line text-info"></i> <!-- Hasil Bobot -->
     <p>Hasil Perhitungan Kriteria</p>
   </a>
 </li>
+
 
 
 

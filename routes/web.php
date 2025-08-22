@@ -101,6 +101,8 @@ Route::get('/operator/kriteria/hasil', [OperatorController::class, 'hasilAHP'])-
 */
 Route::middleware(['auth', 'role:guru'])->group(function () {
     Route::get('/guru/dashboard', [GuruController::class, 'dashboard'])->name('guru.dashboard');
+    Route::get('/guru/hasil-ahp', [GuruController::class, 'hasilAHP'])->name('guru.hasil.ahp');
+
 });
 
 /*
