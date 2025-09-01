@@ -232,28 +232,27 @@ public function simpanPerbandingan(Request $request)
     // Hapus perbandingan lama
     PerbandinganKriteria::truncate();
 
-    foreach ($listKriteria as $i => $k1) {
-        foreach ($listKriteria as $j => $k2) {
-            if ($i < $j) {
-                $field = "kriteria_{$k1->id}_vs_{$k2->id}";
-                $nilai = $request->input($field, 1);
+  foreach ($listKriteria as $i => $k1) {
+    foreach ($listKriteria as $j => $k2) {
+        if ($i < $j) {
+            $field = "kriteria_{$k1->id}_vs_{$k2->id}";
+            $nilai = $request->input($field, 1);
 
-                // Simpan nilai perbandingan
-                PerbandinganKriteria::create([
-                    'kriteria1_id' => $k1->id,
-                    'kriteria2_id' => $k2->id,
-                    'nilai' => $nilai
-                ]);
+            // Update atau buat baru
+            PerbandinganKriteria::updateOrCreate(
+                ['kriteria1_id' => $k1->id, 'kriteria2_id' => $k2->id],
+                ['nilai' => $nilai]
+            );
 
-                // Simpan nilai kebalikannya
-                PerbandinganKriteria::create([
-                    'kriteria1_id' => $k2->id,
-                    'kriteria2_id' => $k1->id,
-                    'nilai' => 1 / $nilai
-                ]);
-            }
+            // Update atau buat nilai kebalikannya
+            PerbandinganKriteria::updateOrCreate(
+                ['kriteria1_id' => $k2->id, 'kriteria2_id' => $k1->id],
+                ['nilai' => 1 / $nilai]
+            );
         }
     }
+}
+
 
     return redirect()->route('operator.kriteria.perbandingan.index')
         ->with('success', 'Data perbandingan berhasil disimpan.');

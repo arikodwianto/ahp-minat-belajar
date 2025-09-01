@@ -137,19 +137,21 @@
         <!--begin::Sidebar Brand-->
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
-          <a href="./index.html" class="brand-link">
-            <!--begin::Brand Image-->
-           <img
-  src="{{ asset('lte/dist/assets/img/AdminLTELogo.png') }}"
-  alt="AdminLTE Logo"
-  class="brand-image opacity-75 shadow"
-/>
+         <a href="{{ route('operator.dashboard') }}" class="brand-link d-flex align-items-center">
+    <!-- Logo -->
+    <img
+        src="{{ asset('logo/Lambang_Kota_Tanjungpinang.png') }}"
+        alt="Logo"
+        class="opacity-75 shadow me-2"
+        style="width: 35px; height: 35px; object-fit: contain;"
+    />
 
-            <!--end::Brand Image-->
-            <!--begin::Brand Text-->
-            <span class="brand-text fw-light">AdminLTE 4</span>
-            <!--end::Brand Text-->
-          </a>
+    <!-- Teks -->
+    <span class="brand-text fw-light" style="font-size: 16px; white-space: nowrap;">
+        SDN 02 TANJUNGPINANG
+    </span>
+</a>
+
           <!--end::Brand Link-->
         </div>
         <!--end::Sidebar Brand-->
@@ -179,7 +181,7 @@
     <!-- Data Siswa -->
     <li class="nav-item border-bottom {{ request()->routeIs('operator.siswa.*') ? 'menu-open' : '' }}">
         <a href="#"
-           class="nav-link {{ request()->routeIs('operator.siswa.*') ? 'active bg-success text-white' : '' }}">
+           class="nav-link {{ request()->routeIs('operator.siswa.*') ? 'active bg-primary text-white' : '' }}">
             <i class="nav-icon bi bi-people-fill"></i>
             <p>
                 Data Siswa
@@ -189,7 +191,7 @@
         <ul class="nav nav-treeview">
             <li class="nav-item">
                 <a href="{{ route('operator.siswa.index') }}"
-                   class="nav-link {{ request()->routeIs('operator.siswa.index') ? 'active fw-bold text-success' : '' }}">
+                   class="nav-link {{ request()->routeIs('operator.siswa.index') ? 'active fw-bold text-white' : '' }}">
                     <i class="nav-icon bi bi-dot"></i>
                     <p>Daftar Siswa</p>
                 </a>
@@ -200,7 +202,7 @@
     <!-- Data Guru -->
     <li class="nav-item border-bottom {{ request()->routeIs('operator.guru.*') ? 'menu-open' : '' }}">
         <a href="#"
-           class="nav-link {{ request()->routeIs('operator.guru.*') ? 'active bg-warning text-white' : '' }}">
+           class="nav-link {{ request()->routeIs('operator.guru.*') ? 'active bg-primary text-white' : '' }}">
             <i class="nav-icon bi bi-person-badge-fill"></i>
             <p>
                 Data Guru
@@ -210,7 +212,7 @@
         <ul class="nav nav-treeview">
             <li class="nav-item">
                 <a href="{{ route('operator.guru.index') }}"
-                   class="nav-link {{ request()->routeIs('operator.guru.index') ? 'active fw-bold text-warning' : '' }}">
+                   class="nav-link {{ request()->routeIs('operator.guru.index') ? 'active fw-bold text-white' : '' }}">
                     <i class="nav-icon bi bi-dot"></i>
                     <p>Daftar Guru</p>
                 </a>
@@ -221,7 +223,7 @@
     <!-- Data Kelas -->
     <li class="nav-item border-bottom {{ request()->routeIs('operator.kelas.*') ? 'menu-open' : '' }}">
         <a href="#"
-           class="nav-link {{ request()->routeIs('operator.kelas.*') ? 'active bg-danger text-white' : '' }}">
+           class="nav-link {{ request()->routeIs('operator.kelas.*') ? 'active bg-primary text-white' : '' }}">
             <i class="nav-icon bi bi-list-check"></i>
             <p>
                 Data Kelas
@@ -231,7 +233,7 @@
         <ul class="nav nav-treeview">
             <li class="nav-item">
                 <a href="{{ route('operator.kelas.index') }}"
-                   class="nav-link {{ request()->routeIs('operator.kelas.index') ? 'active fw-bold text-danger' : '' }}">
+                   class="nav-link {{ request()->routeIs('operator.kelas.index') ? 'active fw-bold text-white' : '' }}">
                     <i class="nav-icon bi bi-dot"></i>
                     <p>Daftar Kelas</p>
                 </a>
@@ -242,7 +244,7 @@
     <li class="nav-header">Seleksi AHP</li>
     <li class="nav-item border-bottom">
         <a href="{{ route('operator.kriteria.index') }}"
-           class="nav-link {{ request()->routeIs('operator.kriteria.index') ? 'active bg-info text-white' : '' }}">
+           class="nav-link {{ request()->routeIs('operator.kriteria.index') ? 'active bg-primary text-white' : '' }}">
             <i class="nav-icon bi bi-list-task"></i>
             <p>Daftar Kriteria</p>
         </a>
@@ -250,7 +252,7 @@
 
     <li class="nav-item border-bottom">
         <a href="{{ route('operator.kriteria.ahp') }}"
-           class="nav-link {{ request()->routeIs('operator.kriteria.ahp') ? 'active bg-info text-white' : '' }}">
+           class="nav-link {{ request()->routeIs('operator.kriteria.ahp') ? 'active bg-primary text-white' : '' }}">
             <i class="nav-icon bi bi-sliders"></i>
             <p>Perhitungan Kriteria</p>
         </a>
@@ -258,7 +260,7 @@
 
     <li class="nav-item border-bottom">
         <a href="{{ route('operator.kriteria.hasilAHP') }}"
-           class="nav-link {{ request()->routeIs('operator.kriteria.hasilAHP') ? 'active bg-info text-white' : '' }}">
+           class="nav-link {{ request()->routeIs('operator.kriteria.hasilAHP') ? 'active bg-primary text-white' : '' }}">
             <i class="nav-icon bi bi-bar-chart-line"></i>
             <p>Hasil Perhitungan Kriteria</p>
         </a>
