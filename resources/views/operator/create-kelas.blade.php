@@ -27,11 +27,11 @@
                         @csrf
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Nama Kelas</label>
-                            <input type="text" name="nama_kelas" class="form-control" placeholder="Contoh: XII RPL 1" required>
+                            <input type="text" name="nama_kelas" class="form-control" placeholder="Contoh: 1" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Jurusan</label>
-                            <input type="text" name="jurusan" class="form-control" placeholder="Contoh: Rekayasa Perangkat Lunak">
+                            <label class="form-label fw-semibold">Lokal</label>
+                            <input type="text" name="jurusan" class="form-control" placeholder="Contoh: A">
                         </div>
                         <div class="d-flex gap-2">
                             <button type="button" class="btn btn-success" id="btn-simpan">

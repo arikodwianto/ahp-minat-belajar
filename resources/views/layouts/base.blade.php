@@ -3,7 +3,7 @@
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>AdminLTE v4 | Dashboard</title>
+    <title>Operator</title>
 
     <!--begin::Accessibility Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
@@ -33,7 +33,12 @@
       href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css"
       crossorigin="anonymous"
     />
-
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <link
       rel="stylesheet"
@@ -48,6 +53,34 @@
     <link rel="stylesheet" href="{{ asset('lte/dist/vendor/apexcharts/apexcharts.css') }}">
     <link rel="stylesheet" href="{{ asset('lte/dist/vendor/jsvectormap/jsvectormap.min.css') }}">
     <!--end::Third Party Plugin CSS-->
+    <style>
+/* Overlay transparan */
+#loading-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(255,255,255,0.8);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Animasi spinner */
+.spinner {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+</style>
+
 </head>
 
   <!--end::Head-->
@@ -66,8 +99,7 @@
                 <i class="bi bi-list"></i>
               </a>
             </li>
-            <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
-            <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
+           
           </ul>
           <!--end::Start Navbar Links-->
           <!--begin::End Navbar Links-->
@@ -83,50 +115,16 @@
             </li>
             <!--end::Fullscreen Toggle-->
             <!--begin::User Menu Dropdown-->
-            <li class="nav-item dropdown user-menu">
-              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                <img
-                  src="{{ asset('lte/dist/assets/img/user2-160x160.jpg') }}"
-                  class="user-image rounded-circle shadow"
-                  alt="User Image"
-                />
-                <span class="d-none d-md-inline">Alexander Pierce</span>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                <!--begin::User Image-->
-                <li class="user-header text-bg-primary">
-  <img
-    src="{{ asset('assets/img/user2-160x160.jpg') }}"
-    class="rounded-circle shadow"
-    alt="User Image"
-  />
+           <li class="nav-item dropdown user-menu">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+    <i class="bi bi-person-circle fs-4 me-2"></i>
+    <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
+  </a>
 </li>
 
-                  <p>
-                    Alexander Pierce - Web Developer
-                    <small>Member since Nov. 2023</small>
-                  </p>
-                </li>
                 <!--end::User Image-->
                 <!--begin::Menu Body-->
-                <li class="user-body">
-                  <!--begin::Row-->
-                  <div class="row">
-                    <div class="col-4 text-center"><a href="#">Followers</a></div>
-                    <div class="col-4 text-center"><a href="#">Sales</a></div>
-                    <div class="col-4 text-center"><a href="#">Friends</a></div>
-                  </div>
-                  <!--end::Row-->
-                </li>
-                <!--end::Menu Body-->
-                <!--begin::Menu Footer-->
-                <li class="user-footer">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
-                  <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
-                </li>
-                <!--end::Menu Footer-->
-              </ul>
-            </li>
+               
             <!--end::User Menu Dropdown-->
           </ul>
           <!--end::End Navbar Links-->
@@ -158,79 +156,111 @@
         <!--begin::Sidebar Wrapper-->
         
         <div class="sidebar-wrapper">
-          <nav class="mt-2">
-            <!--begin::Sidebar Menu-->
-            <ul
-              class="nav sidebar-menu flex-column"
-              data-lte-toggle="treeview"
-              role="navigation"
-              aria-label="Main navigation"
-              data-accordion="false"
-              id="navigation"
-            >
-              <li class="nav-item menu-open">
-                <a href="#" class="nav-link active">
-                  <i class="nav-icon bi bi-speedometer"></i>
-                  <p>
-                    Dashboard
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
+         <nav class="mt-2">
+  <!-- Sidebar Menu -->
+  <ul
+    class="nav sidebar-menu flex-column"
+    data-lte-toggle="treeview"
+    role="navigation"
+    aria-label="Main navigation"
+    data-accordion="false"
+    id="navigation"
+>
+    <li class="nav-header">Dashboard</li>
+    <li class="nav-item border-bottom">
+        <a href="{{ route('guru.dashboard') }}"
+           class="nav-link {{ request()->routeIs('guru.dashboard') ? 'active bg-primary text-white' : '' }}">
+            <i class="nav-icon bi bi-house-door-fill"></i>
+            <p>Home</p>
+        </a>
+    </li>
+
+    <li class="nav-header">Data Master</li>
+    <!-- Data Siswa -->
+    <li class="nav-item border-bottom {{ request()->routeIs('operator.siswa.*') ? 'menu-open' : '' }}">
+        <a href="#"
+           class="nav-link {{ request()->routeIs('operator.siswa.*') ? 'active bg-success text-white' : '' }}">
+            <i class="nav-icon bi bi-people-fill"></i>
+            <p>
+                Data Siswa
+                <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+        </a>
+        <ul class="nav nav-treeview">
+            <li class="nav-item">
+                <a href="{{ route('guru.index.siswa') }}"
+                   class="nav-link {{ request()->routeIs('guru.index.siswa') ? 'active fw-bold text-success' : '' }}">
+                    <i class="nav-icon bi bi-dot"></i>
+                    <p>Daftar Siswa</p>
                 </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./index.html" class="nav-link active">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v1</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./index2.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v2</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./index3.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Dashboard v3</p>
-                    </a>
-                  </li>
-                
-              </li>
-              <li class="nav-header">EXAMPLES</li>
-           
-            <!--end::Sidebar Menu-->
-          </nav>
+            </li>
+        </ul>
+    </li>
+
+  
+
+    <li class="nav-header">Seleksi AHP</li>
+   
+
+    <li class="nav-item border-bottom">
+        <a href="{{ route('guru.hasil.ahp') }}"
+           class="nav-link {{ request()->routeIs('guru.hasil.ahp') ? 'active bg-info text-white' : '' }}">
+            <i class="nav-icon bi bi-bar-chart-line"></i>
+            <p>Hasil Perhitungan Kriteria</p>
+        </a>
+    </li>
+</ul>
+
+</nav>
+
         </div>
         <!--end::Sidebar Wrapper-->
         
       </aside>
       <!-- Main Content -->
+       <div id="loading-overlay">
+    <div class="spinner"></div>
+</div>
+
     <main class="container">
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+        @if (session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '{{ session("success") }}',
+        timer: 2000,
+        showConfirmButton: false
+    });
+</script>
+@endif
+
 
         @yield('content')
     </main>
       <!--end::Sidebar-->
+<!--begin::Footer-->
+<footer class="app-footer bg-light border-top py-3">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    <!--begin::Copyright-->
+    <span class="text-muted">
+      &copy; <span id="year"></span> Sistem Informasi Sub Bagian Umum & Kepegawaian. 
+      All rights reserved.
+    </span>
+    <!--end::Copyright-->
 
-      <!--begin::Footer-->
-      <footer class="app-footer">
-        <!--begin::To the end-->
-        <div class="float-end d-none d-sm-inline">Anything you want</div>
-        <!--end::To the end-->
-        <!--begin::Copyright-->
-        <strong>
-          Copyright &copy; 2014-2025&nbsp;
-          <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
-        </strong>
-        All rights reserved.
-        <!--end::Copyright-->
-      </footer>
-      <!--end::Footer-->
+    <!--begin::Credits-->
+    <span class="text-muted">
+      Dikembangkan dengan ❤️ menggunakan 
+      <a href="https://adminlte.io" class="text-decoration-none fw-bold">AdminLTE</a>
+    </span>
+    <!--end::Credits-->
+  </div>
+</footer>
+<!--end::Footer-->
+
+
+
     </div>
     <!--end::App Wrapper-->
     <!--begin::Script-->
@@ -240,6 +270,26 @@
       crossorigin="anonymous"
     ></script>
     <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+    <script>
+  // otomatis update tahun copyright
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+<!-- JS untuk highlight langsung -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const links = document.querySelectorAll("#navigation .nav-link");
+
+    links.forEach(link => {
+      link.addEventListener("click", function() {
+        // hapus semua active dulu
+        links.forEach(l => l.classList.remove("active", "bg-primary", "bg-success", "bg-info", "text-white"));
+
+        // tambahin active ke yg di klik
+        this.classList.add("active", "bg-primary", "text-white");
+      });
+    });
+  });
+</script>
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
       crossorigin="anonymous"
@@ -357,6 +407,7 @@
       );
       sales_chart.render();
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- jsvectormap -->
     <script
       src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"
@@ -462,6 +513,102 @@
       sparkline3.render();
     </script>
     <!--end::Script-->
+    <!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
+
+<!-- jQuery & DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+<script>
+$(document).ready(function () {
+    $.fn.dataTable.ext.errMode = 'none'; // matikan alert warning
+    $('#dataTable').DataTable({
+        destroy: true,
+        pageLength: 10,
+        lengthMenu: [5, 10, 25, 50],
+        language: { 
+            search: "Cari:",
+            lengthMenu: "Tampilkan _MENU_ data",
+            info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+            paginate: {
+                first: "Awal",
+                last: "Akhir",
+              next: "Berikutnya", 
+                previous: "Sebelumnya"
+            },
+            zeroRecords: "Data tidak ditemukan"
+        }
+    });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const forms = document.querySelectorAll('.form-hapus');
+
+    forms.forEach(form => {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault(); // cegah submit langsung
+
+            Swal.fire({
+                title: 'Apakah kamu yakin?',
+                text: "Data akan dihapus permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // submit kalau dikonfirmasi
+                }
+            });
+        });
+    });
+});
+</script>
+<script>
+document.getElementById('btn-simpan').addEventListener('click', function(e) {
+    Swal.fire({
+        title: 'Yakin ingin menyimpan data?',
+        text: "Data akan disimpan ke database.",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Simpan!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('form-simpan').submit();
+        }
+    });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form");
+    const btnSubmit = document.getElementById("btnSubmit");
+    const spinner = btnSubmit.querySelector(".spinner-border");
+    const icon = btnSubmit.querySelector(".bi");
+
+    if (form) {
+        form.addEventListener("submit", function () {
+            // Munculkan spinner
+            spinner.classList.remove("d-none");
+            // Sembunyikan icon save
+            if (icon) icon.classList.add("d-none");
+            // Disable tombol agar tidak double klik
+            btnSubmit.setAttribute("disabled", true);
+        });
+    }
+});
+</script>
+
+
+
   </body>
+  @stack('scripts')
+
   <!--end::Body-->
 </html>

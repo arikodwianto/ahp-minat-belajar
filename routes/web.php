@@ -5,6 +5,9 @@ use App\Http\Controllers\OperatorController;
 use App\Http\Controllers\GuruController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\PerbandinganKriteriaController;
+use App\Http\Controllers\KriteriaController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -55,13 +58,27 @@ Route::middleware(['auth', 'role:operator'])->group(function () {
     Route::put('/operator/guru/{id}', [OperatorController::class, 'updateGuru'])->name('operator.guru.update');
     Route::delete('/operator/guru/{id}', [OperatorController::class, 'destroyGuru'])->name('operator.guru.destroy');
 
-    // ===== CRUD Kriteria =====
-    Route::get('/operator/kriteria', [OperatorController::class, 'indexKriteria'])->name('operator.kriteria.index');
-    Route::get('/operator/kriteria/create', [OperatorController::class, 'createKriteria'])->name('operator.kriteria.create');
-    Route::post('/operator/kriteria/store', [OperatorController::class, 'storeKriteria'])->name('operator.kriteria.store');
-    Route::get('/operator/kriteria/{id}/edit', [OperatorController::class, 'editKriteria'])->name('operator.kriteria.edit');
-    Route::put('/operator/kriteria/{id}', [OperatorController::class, 'updateKriteria'])->name('operator.kriteria.update');
-    Route::delete('/operator/kriteria/{id}', [OperatorController::class, 'destroyKriteria'])->name('operator.kriteria.destroy');
+   // ===== CRUD Kriteria =====
+Route::prefix('operator/kriteria')->name('operator.kriteria.')->group(function () {
+    Route::get('/', [OperatorController::class, 'indexKriteria'])->name('index');
+    Route::get('/create', [OperatorController::class, 'createKriteria'])->name('create');
+    Route::post('/store', [OperatorController::class, 'storeKriteria'])->name('store');
+    Route::get('/{id}/edit', [OperatorController::class, 'editKriteria'])->name('edit');
+    Route::put('/{id}', [OperatorController::class, 'updateKriteria'])->name('update');
+    Route::delete('/{id}', [OperatorController::class, 'destroyKriteria'])->name('destroy');
+
+    // === Seleksi AHP ===
+    Route::get('/ahp', [OperatorController::class, 'kriteriaPerbandingan'])->name('ahp'); 
+    Route::post('/ahp/hitung', [OperatorController::class, 'hitungAHP'])->name('hitungAHP'); 
+    Route::get('/hasil', [OperatorController::class, 'hasilAHP'])->name('hasilAHP'); 
+
+    // === Perbandingan Kriteria ===
+    Route::prefix('perbandingan')->name('perbandingan.')->group(function () {
+        Route::get('/', [OperatorController::class, 'kriteriaPerbandingan'])->name('index'); 
+        Route::post('/simpan', [OperatorController::class, 'simpanPerbandingan'])->name('simpan');
+        Route::post('/hitung', [OperatorController::class, 'hitungAHP'])->name('hitung');
+    });
+});
 
     // ===== CRUD Data Siswa =====
   
@@ -85,13 +102,11 @@ Route::get('/operator/kelas/edit/{id}', [OperatorController::class, 'editKelas']
 Route::put('/operator/kelas/update/{id}', [OperatorController::class, 'updateKelas'])->name('operator.kelas.update');
 Route::delete('/operator/kelas/delete/{id}', [OperatorController::class, 'destroyKelas'])->name('operator.kelas.destroy');
 
-// Seleksi AHP
-Route::get('/operator/kriteria/ahp', [OperatorController::class, 'ahpKriteria'])->name('operator.kriteria.ahp');
-Route::post('/operator/kriteria/ahp/hitung', [OperatorController::class, 'hitungAHP'])->name('operator.kriteria.hitungAHP');
-Route::get('/operator/kriteria/hasil', [OperatorController::class, 'hasilAHP'])->name('operator.kriteria.hasilAHP');
+
 
 
 });
+
 
 
 /*
@@ -102,6 +117,7 @@ Route::get('/operator/kriteria/hasil', [OperatorController::class, 'hasilAHP'])-
 Route::middleware(['auth', 'role:guru'])->group(function () {
     Route::get('/guru/dashboard', [GuruController::class, 'dashboard'])->name('guru.dashboard');
     Route::get('/guru/hasil-ahp', [GuruController::class, 'hasilAHP'])->name('guru.hasil.ahp');
+    Route::get('/guru/siswa', [GuruController::class, 'indexSiswa'])->name('guru.index.siswa');
 
 });
 

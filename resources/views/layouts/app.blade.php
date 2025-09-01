@@ -53,6 +53,34 @@
     <link rel="stylesheet" href="{{ asset('lte/dist/vendor/apexcharts/apexcharts.css') }}">
     <link rel="stylesheet" href="{{ asset('lte/dist/vendor/jsvectormap/jsvectormap.min.css') }}">
     <!--end::Third Party Plugin CSS-->
+    <style>
+/* Overlay transparan */
+#loading-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(255,255,255,0.8);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Animasi spinner */
+.spinner {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+</style>
+
 </head>
 
   <!--end::Head-->
@@ -137,96 +165,106 @@
     aria-label="Main navigation"
     data-accordion="false"
     id="navigation"
-  >
+>
     <li class="nav-header">Dashboard</li>
     <li class="nav-item border-bottom">
-      <a href="{{ route('operator.dashboard') }}" class="nav-link">
-        <i class="nav-icon bi bi-house-door-fill text-primary"></i>
-        <p>Home</p>
-      </a>
+        <a href="{{ route('operator.dashboard') }}"
+           class="nav-link {{ request()->routeIs('operator.dashboard') ? 'active bg-primary text-white' : '' }}">
+            <i class="nav-icon bi bi-house-door-fill"></i>
+            <p>Home</p>
+        </a>
     </li>
 
     <li class="nav-header">Data Master</li>
+    <!-- Data Siswa -->
+    <li class="nav-item border-bottom {{ request()->routeIs('operator.siswa.*') ? 'menu-open' : '' }}">
+        <a href="#"
+           class="nav-link {{ request()->routeIs('operator.siswa.*') ? 'active bg-success text-white' : '' }}">
+            <i class="nav-icon bi bi-people-fill"></i>
+            <p>
+                Data Siswa
+                <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+        </a>
+        <ul class="nav nav-treeview">
+            <li class="nav-item">
+                <a href="{{ route('operator.siswa.index') }}"
+                   class="nav-link {{ request()->routeIs('operator.siswa.index') ? 'active fw-bold text-success' : '' }}">
+                    <i class="nav-icon bi bi-dot"></i>
+                    <p>Daftar Siswa</p>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <!-- Data Guru -->
+    <li class="nav-item border-bottom {{ request()->routeIs('operator.guru.*') ? 'menu-open' : '' }}">
+        <a href="#"
+           class="nav-link {{ request()->routeIs('operator.guru.*') ? 'active bg-warning text-white' : '' }}">
+            <i class="nav-icon bi bi-person-badge-fill"></i>
+            <p>
+                Data Guru
+                <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+        </a>
+        <ul class="nav nav-treeview">
+            <li class="nav-item">
+                <a href="{{ route('operator.guru.index') }}"
+                   class="nav-link {{ request()->routeIs('operator.guru.index') ? 'active fw-bold text-warning' : '' }}">
+                    <i class="nav-icon bi bi-dot"></i>
+                    <p>Daftar Guru</p>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <!-- Data Kelas -->
+    <li class="nav-item border-bottom {{ request()->routeIs('operator.kelas.*') ? 'menu-open' : '' }}">
+        <a href="#"
+           class="nav-link {{ request()->routeIs('operator.kelas.*') ? 'active bg-danger text-white' : '' }}">
+            <i class="nav-icon bi bi-list-check"></i>
+            <p>
+                Data Kelas
+                <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+        </a>
+        <ul class="nav nav-treeview">
+            <li class="nav-item">
+                <a href="{{ route('operator.kelas.index') }}"
+                   class="nav-link {{ request()->routeIs('operator.kelas.index') ? 'active fw-bold text-danger' : '' }}">
+                    <i class="nav-icon bi bi-dot"></i>
+                    <p>Daftar Kelas</p>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="nav-header">Seleksi AHP</li>
     <li class="nav-item border-bottom">
-      <a href="#" class="nav-link">
-        <i class="nav-icon bi bi-people-fill text-success"></i>
-        <p>
-          Data Siswa
-          <i class="nav-arrow bi bi-chevron-right"></i>
-        </p>
-      </a>
-      <ul class="nav nav-treeview">
-        <li class="nav-item">
-          <a href="{{ route('operator.siswa.index') }}" class="nav-link">
-            <i class="nav-icon bi bi-dot text-muted"></i>
-            <p>Daftar Siswa</p>
-          </a>
-        </li>
-      </ul>
+        <a href="{{ route('operator.kriteria.index') }}"
+           class="nav-link {{ request()->routeIs('operator.kriteria.index') ? 'active bg-info text-white' : '' }}">
+            <i class="nav-icon bi bi-list-task"></i>
+            <p>Daftar Kriteria</p>
+        </a>
     </li>
 
     <li class="nav-item border-bottom">
-      <a href="#" class="nav-link">
-        <i class="nav-icon bi bi-person-badge-fill text-warning"></i>
-        <p>
-          Data Guru
-          <i class="nav-arrow bi bi-chevron-right"></i>
-        </p>
-      </a>
-      <ul class="nav nav-treeview">
-        <li class="nav-item">
-          <a href="{{ route('operator.guru.index') }}" class="nav-link">
-            <i class="nav-icon bi bi-dot text-muted"></i>
-            <p>Daftar Guru</p>
-          </a>
-        </li>
-      </ul>
+        <a href="{{ route('operator.kriteria.ahp') }}"
+           class="nav-link {{ request()->routeIs('operator.kriteria.ahp') ? 'active bg-info text-white' : '' }}">
+            <i class="nav-icon bi bi-sliders"></i>
+            <p>Perhitungan Kriteria</p>
+        </a>
     </li>
 
     <li class="nav-item border-bottom">
-      <a href="#" class="nav-link">
-        <i class="nav-icon bi bi-list-check text-danger"></i>
-        <p>
-          Data Kelas
-          <i class="nav-arrow bi bi-chevron-right"></i>
-        </p>
-      </a>
-      <ul class="nav nav-treeview">
-        <li class="nav-item">
-          <a href="{{ route('operator.kelas.index') }}" class="nav-link">
-            <i class="nav-icon bi bi-dot text-muted"></i>
-            <p>Daftar Kelas</p>
-          </a>
-        </li>
-      </ul>
+        <a href="{{ route('operator.kriteria.hasilAHP') }}"
+           class="nav-link {{ request()->routeIs('operator.kriteria.hasilAHP') ? 'active bg-info text-white' : '' }}">
+            <i class="nav-icon bi bi-bar-chart-line"></i>
+            <p>Hasil Perhitungan Kriteria</p>
+        </a>
     </li>
+</ul>
 
-   <li class="nav-header">Seleksi AHP</li>
-<li class="nav-item border-bottom">
-  <a href="{{ route('operator.kriteria.index') }}" class="nav-link">
-    <i class="nav-icon bi bi-list-task text-info"></i> <!-- Daftar Kriteria -->
-    <p>Daftar Kriteria</p>
-  </a>
-</li>
-
-<li class="nav-item border-bottom">
-  <a href="{{ route('operator.kriteria.ahp') }}" class="nav-link">
-    <i class="nav-icon bi bi-sliders text-info"></i> <!-- Perbandingan / Perhitungan AHP -->
-    <p>Perhitungan Kriteria</p>
-  </a>
-</li>
-
-<li class="nav-item border-bottom">
-  <a href="{{ route('operator.kriteria.hasilAHP') }}" class="nav-link">
-    <i class="nav-icon bi bi-bar-chart-line text-info"></i> <!-- Hasil Bobot -->
-    <p>Hasil Perhitungan Kriteria</p>
-  </a>
-</li>
-
-
-
-
-  </ul>
 </nav>
 
         </div>
@@ -234,6 +272,10 @@
         
       </aside>
       <!-- Main Content -->
+       <div id="loading-overlay">
+    <div class="spinner"></div>
+</div>
+
     <main class="container">
         @if (session('success'))
 <script>
@@ -285,6 +327,22 @@
     <script>
   // otomatis update tahun copyright
   document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+<!-- JS untuk highlight langsung -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const links = document.querySelectorAll("#navigation .nav-link");
+
+    links.forEach(link => {
+      link.addEventListener("click", function() {
+        // hapus semua active dulu
+        links.forEach(l => l.classList.remove("active", "bg-primary", "bg-success", "bg-info", "text-white"));
+
+        // tambahin active ke yg di klik
+        this.classList.add("active", "bg-primary", "text-white");
+      });
+    });
+  });
 </script>
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
@@ -581,6 +639,26 @@ document.getElementById('btn-simpan').addEventListener('click', function(e) {
     });
 });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form");
+    const btnSubmit = document.getElementById("btnSubmit");
+    const spinner = btnSubmit.querySelector(".spinner-border");
+    const icon = btnSubmit.querySelector(".bi");
+
+    if (form) {
+        form.addEventListener("submit", function () {
+            // Munculkan spinner
+            spinner.classList.remove("d-none");
+            // Sembunyikan icon save
+            if (icon) icon.classList.add("d-none");
+            // Disable tombol agar tidak double klik
+            btnSubmit.setAttribute("disabled", true);
+        });
+    }
+});
+</script>
+
 
 
   </body>

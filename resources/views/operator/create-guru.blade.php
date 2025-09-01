@@ -45,7 +45,7 @@
                     <h4 class="mb-0"><i class="bi bi-person-plus-fill me-2"></i> Form Tambah Guru</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('operator.guru.store') }}" method="POST">
+                    <form id="myForm" action="{{ route('operator.guru.store') }}" method="POST">
                         @csrf
                         
                         <div class="mb-3">
@@ -72,9 +72,11 @@
                             <a href="{{ route('operator.guru.index') }}" class="btn btn-secondary me-2">
                                 <i class="bi bi-arrow-left"></i> Kembali
                             </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-save me-1"></i> Simpan Guru
-                            </button>
+                           <button type="submit" class="btn btn-primary" id="btnSubmit">
+    <span class="spinner-border spinner-border-sm me-1 d-none" role="status" aria-hidden="true"></span>
+    <i class="bi bi-save me-1"></i> Simpan Guru
+</button>
+
                         </div>
                     </form>
                 </div>

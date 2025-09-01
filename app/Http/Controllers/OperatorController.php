@@ -12,6 +12,7 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\SiswaImport;
+use App\Models\PerbandinganKriteria;
 
 use App\Models\HasilAHP;
 
@@ -160,99 +161,106 @@ class OperatorController extends Controller
     }
 
 // Seleksi AHP
- // ===== Seleksi AHP =====
-public function ahpKriteria()
+ // Tampilkan daftar kriteria & form perbandingan
+    public function kriteriaPerbandingan(Request $request)
 {
-    $kriterias = Kriteria::all();
-    $n = count($kriterias);
+    $kriteria = Kriteria::orderBy('id')->get();
+    return view('operator.kriteria.perbandingan', compact('kriteria'));
+}
 
-    // Ambil matriks lama dari session (atau DB kalau mau)
-    $matriks = session('form_ahp.matriks', []);
 
-    // Kalau kosong, isi default identitas
-    if (empty($matriks)) {
-        for ($i = 0; $i < $n; $i++) {
-            for ($j = 0; $j < $n; $j++) {
-                $matriks[$i][$j] = ($i == $j) ? 1 : 1; // default 1
+    // Simpan perbandingan kriteria
+
+
+// Hasil perhitungan AHP
+public function hasilAHP()
+{
+    $kriteria = Kriteria::all();
+    $n = $kriteria->count();
+
+    $bobotKriteria = [];
+
+    if ($n > 0) {
+        // Matriks perbandingan
+        $matrix = array_fill(0, $n, array_fill(0, $n, 1));
+
+        foreach ($kriteria as $i => $k1) {
+            foreach ($kriteria as $j => $k2) {
+                if ($i != $j) {
+                    $nilai = PerbandinganKriteria::where('kriteria1_id', $k1->id)
+                        ->where('kriteria2_id', $k2->id)
+                        ->value('nilai') ?? 1;
+                    $matrix[$i][$j] = $nilai;
+                }
             }
+        }
+
+        // Hitung bobot (geometric mean)
+        $geomMeans = [];
+        foreach ($matrix as $row) {
+            $geomMeans[] = pow(array_product($row), 1 / $n);
+        }
+
+        $sumGeom = array_sum($geomMeans);
+        $weights = array_map(fn($gm) => $gm / $sumGeom, $geomMeans);
+
+        foreach ($kriteria as $i => $k) {
+            $bobotKriteria[] = [
+                'kriteria' => $k->nama,
+                'bobot' => round($weights[$i], 4)
+            ];
         }
     }
 
-    return view('operator.kriteria.ahp-kriteria', compact('kriterias', 'matriks'));
+    return view('operator.kriteria.hasil-ahp', compact('kriteria', 'bobotKriteria'));
 }
 
 public function hitungAHP(Request $request)
 {
-    $kriterias = Kriteria::all();
-    $n = count($kriterias);
-   
-    $data = $request->input('matriks', []);
-    session(['form_ahp' => $data]);
+    // 1. Simpan perbandingan
+    $this->simpanPerbandingan($request);
 
-    // Ambil input matriks
-    $matriks = [];
-    for ($i = 0; $i < $n; $i++) {
-        for ($j = 0; $j < $n; $j++) {
-            $matriks[$i][$j] = $request->input("matriks.$i.$j");
-        }
-    }
-
-    // Hitung jumlah tiap kolom
-    $jumlah_kolom = [];
-    for ($j = 0; $j < $n; $j++) {
-        $jumlah_kolom[$j] = 0;
-        for ($i = 0; $i < $n; $i++) {
-            $jumlah_kolom[$j] += $matriks[$i][$j];
-        }
-    }
-
-    // Normalisasi
-    $matriks_normal = [];
-    for ($i = 0; $i < $n; $i++) {
-        for ($j = 0; $j < $n; $j++) {
-            $matriks_normal[$i][$j] = $matriks[$i][$j] / $jumlah_kolom[$j];
-        }
-    }
-
-    // Hitung bobot (rata-rata baris)
-    $bobot = [];
-    for ($i = 0; $i < $n; $i++) {
-        $bobot[$i] = array_sum($matriks_normal[$i]) / $n;
-    }
-
-    // Simpan bobot ke tabel hasil_ahp
-    foreach ($kriterias as $i => $kriteria) {
-        \App\Models\HasilAHP::updateOrCreate(
-            ['kriteria_id' => $kriteria->id],
-            ['bobot' => $bobot[$i]]
-        );
-    }
-
-    // Redirect ke halaman hasil
-    return back()->with('success', 'Matriks berhasil disimpan.');
+    // 2. Redirect ke hasil AHP
+    return redirect()->route('operator.kriteria.hasilAHP')
+        ->with('success', 'Perhitungan AHP berhasil dilakukan.');
 }
-public function simpanForm(Request $request)
+
+public function simpanPerbandingan(Request $request)
 {
-    $data = $request->validate([
-        'nama' => 'required|string',
-        'nilai' => 'required|numeric',
-    ]);
+    $listKriteria = Kriteria::all();
 
-    HasilAhp::updateOrCreate(
-        ['kriteria_id' => $request->kriteria_id],
-        ['nilai' => $request->nilai]
-    );
+    // Hapus perbandingan lama
+    PerbandinganKriteria::truncate();
 
-    return back()->with('success', 'Data berhasil disimpan.');
+    foreach ($listKriteria as $i => $k1) {
+        foreach ($listKriteria as $j => $k2) {
+            if ($i < $j) {
+                $field = "kriteria_{$k1->id}_vs_{$k2->id}";
+                $nilai = $request->input($field, 1);
+
+                // Simpan nilai perbandingan
+                PerbandinganKriteria::create([
+                    'kriteria1_id' => $k1->id,
+                    'kriteria2_id' => $k2->id,
+                    'nilai' => $nilai
+                ]);
+
+                // Simpan nilai kebalikannya
+                PerbandinganKriteria::create([
+                    'kriteria1_id' => $k2->id,
+                    'kriteria2_id' => $k1->id,
+                    'nilai' => 1 / $nilai
+                ]);
+            }
+        }
+    }
+
+    return redirect()->route('operator.kriteria.perbandingan.index')
+        ->with('success', 'Data perbandingan berhasil disimpan.');
 }
 
 
-// Menampilkan hasil AHP
-public function hasilAHP()
-{
-    $hasil = \App\Models\HasilAHP::with('kriteria')->get();
-    return view('operator.kriteria.hasil-ahp', compact('hasil'));
-}
+
 
 
 

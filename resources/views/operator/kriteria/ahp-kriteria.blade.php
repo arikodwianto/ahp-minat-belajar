@@ -31,18 +31,6 @@
                 </div>
             @endif
 
-            @if ($errors->any())
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Terjadi kesalahan:
-                    <ul class="mb-0 mt-2">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
             <div class="card shadow-lg border-0 rounded-3">
                 <div class="card-header bg-primary text-white">
                     <h4 class="mb-0"><i class="bi bi-calculator me-2"></i> Matriks Perbandingan Kriteria</h4>
@@ -67,22 +55,39 @@
                                             @foreach($kriterias as $j => $k2)
                                                 <td>
                                                     @if($i == $j)
-                                                        <select class="form-select text-center" disabled>
-                                                            <option value="1" selected>1</option>
-                                                        </select>
+                                                        <input type="text" class="form-control text-center bg-light" value="1" readonly>
                                                         <input type="hidden" name="matriks[{{ $i }}][{{ $j }}]" value="1">
-                                                    @else
+                                                    @elseif($i < $j)
                                                         <select name="matriks[{{ $i }}][{{ $j }}]"
                                                                 class="form-select ahp-select text-center"
                                                                 data-row="{{ $i }}" data-col="{{ $j }}">
                                                             <option value="">-- pilih --</option>
-                                                            @for($v = 1; $v <= 9; $v++)
-                                                                <option value="{{ $v }}"
-                                                                    @if(old("matriks.$i.$j", session("form_ahp.$i.$j")) == $v) selected @endif>
-                                                                    {{ $v }}
-                                                                </option>
-                                                            @endfor
+                                                            {{-- Skala Saaty 1–9 dan kebalikannya --}}
+                                                            <option value="1" @selected(session("form_ahp.$i.$j") == 1)>1 Sama penting</option>
+                                                            <option value="2" @selected(session("form_ahp.$i.$j") == 2)>2 Mendekati sedikit lebih penting</option>
+                                                            <option value="3" @selected(session("form_ahp.$i.$j") == 3)>3 Sedikit lebih penting</option>
+                                                            <option value="4" @selected(session("form_ahp.$i.$j") == 4)>4 Mendekati lebih penting</option>
+                                                            <option value="5" @selected(session("form_ahp.$i.$j") == 5)>5 Lebih penting</option>
+                                                            <option value="6" @selected(session("form_ahp.$i.$j") == 6)>6 Mendekati sangat penting</option>
+                                                            <option value="7" @selected(session("form_ahp.$i.$j") == 7)>7 Sangat penting</option>
+                                                            <option value="8" @selected(session("form_ahp.$i.$j") == 8)>8 Mendekati mutlak</option>
+                                                            <option value="9" @selected(session("form_ahp.$i.$j") == 9)>9 Mutlak lebih penting</option>
+                                                            <option value="0.5" @selected(session("form_ahp.$i.$j") == 0.5)>1/2</option>
+                                                            <option value="0.3333" @selected(session("form_ahp.$i.$j") == 0.3333)>1/3</option>
+                                                            <option value="0.25" @selected(session("form_ahp.$i.$j") == 0.25)>1/4</option>
+                                                            <option value="0.2" @selected(session("form_ahp.$i.$j") == 0.2)>1/5</option>
+                                                            <option value="0.1667" @selected(session("form_ahp.$i.$j") == 0.1667)>1/6</option>
+                                                            <option value="0.1429" @selected(session("form_ahp.$i.$j") == 0.1429)>1/7</option>
+                                                            <option value="0.125" @selected(session("form_ahp.$i.$j") == 0.125)>1/8</option>
+                                                            <option value="0.1111" @selected(session("form_ahp.$i.$j") == 0.1111)>1/9</option>
                                                         </select>
+                                                    @else
+                                                        {{-- Bagian bawah akan diisi otomatis oleh JS --}}
+                                                        <input type="text" 
+                                                               class="form-control text-center bg-light reciprocal" 
+                                                               name="matriks[{{ $i }}][{{ $j }}]" 
+                                                               value="{{ session("form_ahp.$i.$j") }}" 
+                                                               readonly>
                                                     @endif
                                                 </td>
                                             @endforeach
@@ -114,17 +119,17 @@
 
 @section('scripts')
 <script>
-    // Sinkronisasi nilai (inverse)
+    // Sinkronisasi nilai reciprocal
     document.querySelectorAll('.ahp-select').forEach(function(select) {
         select.addEventListener('change', function() {
             let row = this.dataset.row;
             let col = this.dataset.col;
-            let val = parseInt(this.value);
+            let val = parseFloat(this.value);
 
             if (row !== col && val) {
-                let inverseSelect = document.querySelector('select[data-row="'+col+'"][data-col="'+row+'"]');
-                if (inverseSelect) {
-                    inverseSelect.value = (10 - val); // contoh logika skala 1–9 ↔ 9–1
+                let reciprocalInput = document.querySelector('input[name="matriks['+col+']['+row+']"]');
+                if (reciprocalInput) {
+                    reciprocalInput.value = (1 / val).toFixed(4);
                 }
             }
         });
@@ -134,6 +139,9 @@
     document.getElementById('resetBtn').addEventListener('click', function() {
         document.querySelectorAll('.ahp-select').forEach(function(s) {
             s.value = "";
+        });
+        document.querySelectorAll('.reciprocal').forEach(function(inp) {
+            inp.value = "";
         });
     });
 </script>
