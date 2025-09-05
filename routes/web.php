@@ -104,8 +104,70 @@ Route::delete('/operator/kelas/delete/{id}', [OperatorController::class, 'destro
 
 
 
+    
+   
+
+    // Pertanyaan
+    Route::prefix('pertanyaan')->name('pertanyaan.')->group(function () {
+        Route::get('/', [OperatorController::class, 'indexPertanyaan'])->name('index');
+        Route::get('/create', [OperatorController::class, 'createPertanyaan'])->name('create');
+        Route::post('/', [OperatorController::class, 'storePertanyaan'])->name('store');
+        Route::get('/{id}/edit', [OperatorController::class, 'editPertanyaan'])->name('edit');
+        Route::put('/{id}', [OperatorController::class, 'updatePertanyaan'])->name('update');
+        Route::delete('/{id}', [OperatorController::class, 'destroyPertanyaan'])->name('destroy');
+    });
+
+    // Jawaban
+    Route::prefix('jawaban')->name('jawaban.')->group(function () {
+        Route::get('/', [OperatorController::class, 'indexJawaban'])->name('index');
+        Route::get('/create', [OperatorController::class, 'createJawaban'])->name('create');
+        Route::post('/', [OperatorController::class, 'storeJawaban'])->name('store');
+        Route::get('/{id}/edit', [OperatorController::class, 'editJawaban'])->name('edit');
+        Route::put('/{id}', [OperatorController::class, 'updateJawaban'])->name('update');
+        Route::delete('/{id}', [OperatorController::class, 'destroyJawaban'])->name('destroy');
+    });
+
+    // Form Kuisioner siswa
+    Route::get('/siswa/{siswaId}/kuisioner', [OperatorController::class, 'isiForm'])->name('kuisioner.isi');
+    Route::post('/siswa/{siswaId}/kuisioner', [OperatorController::class, 'simpanForm'])->name('kuisioner.simpan');
+
+    // Hasil Kuisioner
+    Route::get('/kuisioner', [OperatorController::class, 'index'])->name('kuisioner.index');
+    Route::post('/kuisioner', [OperatorController::class, 'store'])->name('kuisioner.store');
+    Route::get('/kuisioner/hasil', [OperatorController::class, 'hasil'])->name('kuisioner.hasil');
+});
+ Route::prefix('alternatif')->name('alternatif.')->group(function () {
+        Route::get('/', [OperatorController::class, 'indexAlternatif'])->name('index');
+        Route::get('/create', [OperatorController::class, 'createAlternatif'])->name('create');
+        Route::post('/', [OperatorController::class, 'storeAlternatif'])->name('store');
+        Route::get('/{id}/edit', [OperatorController::class, 'editAlternatif'])->name('edit');
+        Route::put('/{id}', [OperatorController::class, 'updateAlternatif'])->name('update');
+        Route::delete('/{id}', [OperatorController::class, 'destroyAlternatif'])->name('destroy');
+    });
+Route::prefix('operator/perbandingan-alternatif')->name('perbandingan_alternatif.')->group(function () {
+    // daftar siswa
+    Route::get('/', [OperatorController::class, 'indexPerbandinganAlternatif'])->name('index');
+
+    // form input perbandingan alternatif per siswa
+    Route::get('/{siswa}/create', [OperatorController::class, 'createPerbandinganAlternatif'])->name('create');
+    Route::post('/{siswa}', [OperatorController::class, 'storePerbandinganAlternatif'])->name('store');
+
+    // lihat hasil perbandingan siswa
+    Route::get('/{siswa}/show', [OperatorController::class, 'showPerbandinganAlternatif'])->name('show');
+
+    Route::get('/hasil-siswa', [OperatorController::class, 'indexHasilSiswa'])->name('hasil-siswa');
+
+    // cetak laporan
+    Route::get('/{siswa}/cetak', [OperatorController::class, 'cetakPerbandingan'])->name('cetak');
+
+  Route::get('/cetak-pdf', [OperatorController::class, 'cetakPdfHasilSiswa'])->name('cetak_pdf');
 
 });
+
+
+
+
+
 
 
 

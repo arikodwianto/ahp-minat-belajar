@@ -176,96 +176,120 @@
             <p>Home</p>
         </a>
     </li>
-
     <li class="nav-header">Data Master</li>
-    <!-- Data Siswa -->
-    <li class="nav-item border-bottom {{ request()->routeIs('operator.siswa.*') ? 'menu-open' : '' }}">
-        <a href="#"
-           class="nav-link {{ request()->routeIs('operator.siswa.*') ? 'active bg-primary text-white' : '' }}">
-            <i class="nav-icon bi bi-people-fill"></i>
-            <p>
-                Data Siswa
-                <i class="nav-arrow bi bi-chevron-right"></i>
-            </p>
-        </a>
-        <ul class="nav nav-treeview">
-            <li class="nav-item">
-                <a href="{{ route('operator.siswa.index') }}"
-                   class="nav-link {{ request()->routeIs('operator.siswa.index') ? 'active fw-bold text-white' : '' }}">
-                    <i class="nav-icon bi bi-dot"></i>
-                    <p>Daftar Siswa</p>
-                </a>
-            </li>
-        </ul>
-    </li>
 
-    <!-- Data Guru -->
-    <li class="nav-item border-bottom {{ request()->routeIs('operator.guru.*') ? 'menu-open' : '' }}">
-        <a href="#"
-           class="nav-link {{ request()->routeIs('operator.guru.*') ? 'active bg-primary text-white' : '' }}">
-            <i class="nav-icon bi bi-person-badge-fill"></i>
-            <p>
-                Data Guru
-                <i class="nav-arrow bi bi-chevron-right"></i>
-            </p>
-        </a>
-        <ul class="nav nav-treeview">
-            <li class="nav-item">
-                <a href="{{ route('operator.guru.index') }}"
-                   class="nav-link {{ request()->routeIs('operator.guru.index') ? 'active fw-bold text-white' : '' }}">
-                    <i class="nav-icon bi bi-dot"></i>
-                    <p>Daftar Guru</p>
-                </a>
-            </li>
-        </ul>
-    </li>
+<!-- Data Siswa -->
+<li class="nav-item border-bottom">
+    <a href="{{ route('operator.siswa.index') }}"
+       class="nav-link {{ request()->routeIs('operator.siswa.index') ? 'active bg-primary text-white' : '' }}">
+        <i class="nav-icon bi bi-people"></i>
+        <p>Daftar Siswa</p>
+    </a>
+</li>
 
-    <!-- Data Kelas -->
-    <li class="nav-item border-bottom {{ request()->routeIs('operator.kelas.*') ? 'menu-open' : '' }}">
-        <a href="#"
-           class="nav-link {{ request()->routeIs('operator.kelas.*') ? 'active bg-primary text-white' : '' }}">
-            <i class="nav-icon bi bi-list-check"></i>
-            <p>
-                Data Kelas
-                <i class="nav-arrow bi bi-chevron-right"></i>
-            </p>
-        </a>
-        <ul class="nav nav-treeview">
-            <li class="nav-item">
-                <a href="{{ route('operator.kelas.index') }}"
-                   class="nav-link {{ request()->routeIs('operator.kelas.index') ? 'active fw-bold text-white' : '' }}">
-                    <i class="nav-icon bi bi-dot"></i>
-                    <p>Daftar Kelas</p>
-                </a>
-            </li>
-        </ul>
-    </li>
+<!-- Data Kelas -->
+<li class="nav-item border-bottom">
+    <a href="{{ route('operator.kelas.index') }}"
+       class="nav-link {{ request()->routeIs('operator.kelas.index') ? 'active bg-primary text-white' : '' }}">
+        <i class="nav-icon bi bi-building"></i>
+        <p>Daftar Kelas</p>
+    </a>
+</li>
 
-    <li class="nav-header">Seleksi AHP</li>
-    <li class="nav-item border-bottom">
-        <a href="{{ route('operator.kriteria.index') }}"
-           class="nav-link {{ request()->routeIs('operator.kriteria.index') ? 'active bg-primary text-white' : '' }}">
-            <i class="nav-icon bi bi-list-task"></i>
-            <p>Daftar Kriteria</p>
-        </a>
-    </li>
+<!-- Data Guru -->
+<li class="nav-item border-bottom">
+    <a href="{{ route('operator.guru.index') }}"
+       class="nav-link {{ request()->routeIs('operator.guru.index') ? 'active bg-primary text-white' : '' }}">
+        <i class="nav-icon bi bi-person-badge"></i>
+        <p>Daftar Guru</p>
+    </a>
+</li>
 
-    <li class="nav-item border-bottom">
-        <a href="{{ route('operator.kriteria.ahp') }}"
-           class="nav-link {{ request()->routeIs('operator.kriteria.ahp') ? 'active bg-primary text-white' : '' }}">
-            <i class="nav-icon bi bi-sliders"></i>
-            <p>Perhitungan Kriteria</p>
-        </a>
-    </li>
 
-    <li class="nav-item border-bottom">
-        <a href="{{ route('operator.kriteria.hasilAHP') }}"
-           class="nav-link {{ request()->routeIs('operator.kriteria.hasilAHP') ? 'active bg-primary text-white' : '' }}">
-            <i class="nav-icon bi bi-bar-chart-line"></i>
-            <p>Hasil Perhitungan Kriteria</p>
-        </a>
-    </li>
+   
+
+   
+
+<li class="nav-header">Seleksi AHP</li>
+
+<!-- Kriteria -->
+<li class="nav-item border-bottom {{ request()->routeIs('operator.kriteria.*') ? 'menu-open' : '' }}">
+    <a href="#"
+       class="nav-link {{ request()->routeIs('operator.kriteria.*') ? 'active bg-primary text-white' : '' }}">
+        <i class="nav-icon bi bi-graph-up"></i>
+        <p>
+            Kriteria
+            <i class="nav-arrow bi bi-chevron-right"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('operator.kriteria.index') }}"
+               class="nav-link {{ request()->routeIs('operator.kriteria.index') ? 'active fw-bold text-white' : '' }}">
+                <i class="nav-icon bi bi-list-check"></i>
+                <p>Daftar Kriteria</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('operator.kriteria.ahp') }}"
+               class="nav-link {{ request()->routeIs('operator.kriteria.ahp') ? 'active fw-bold text-white' : '' }}">
+                <i class="nav-icon bi bi-calculator"></i>
+                <p>Perhitungan Kriteria</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('operator.kriteria.hasilAHP') }}"
+               class="nav-link {{ request()->routeIs('operator.kriteria.hasilAHP') ? 'active fw-bold text-white' : '' }}">
+                <i class="nav-icon bi bi-bar-chart-line"></i>
+                <p>Hasil Perhitungan Kriteria</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
+<!-- Perbandingan Alternatif -->
+<li class="nav-item border-bottom {{ request()->routeIs('perbandingan_alternatif.*') ? 'menu-open' : '' }}">
+    <a href="#"
+       class="nav-link {{ request()->routeIs('perbandingan_alternatif.*') ? 'active bg-primary text-white' : '' }}">
+        <i class="nav-icon bi bi-graph-up"></i>
+        <p>
+            Alternatif
+            <i class="nav-arrow bi bi-chevron-right"></i>
+        </p>
+    </a>
+
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('alternatif.index') }}"
+               class="nav-link {{ request()->routeIs('alternatif.index') ? 'active fw-bold text-white' : '' }}">
+                <i class="nav-icon bi bi-list-ul"></i>
+                <p>Daftar Alternatif</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('perbandingan_alternatif.index') }}"
+               class="nav-link {{ request()->routeIs('perbandingan_alternatif.index') ? 'active fw-bold text-white' : '' }}">
+                <i class="nav-icon bi bi-sliders"></i>
+                <p>Daftar Perhitungan Alternatif</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('perbandingan_alternatif.hasil-siswa') }}"
+               class="nav-link {{ request()->routeIs('perbandingan_alternatif.hasil-siswa') ? 'active fw-bold text-white' : '' }}">
+                <i class="nav-icon bi bi-award"></i>
+                <p>Hasil Alternatif Siswa</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
+
 </ul>
+
+
+
 
 </nav>
 
@@ -300,16 +324,12 @@
   <div class="container-fluid d-flex justify-content-between align-items-center">
     <!--begin::Copyright-->
     <span class="text-muted">
-      &copy; <span id="year"></span> Sistem Informasi Sub Bagian Umum & Kepegawaian. 
-      All rights reserved.
+      &copy; <span id="year"></span> Sistem Personalisasi Pembelajaran di Sekolah Dasar Berbasis Gaya Belajar SDN 02 Tanjung Pinang Timur.
     </span>
     <!--end::Copyright-->
 
     <!--begin::Credits-->
-    <span class="text-muted">
-      Dikembangkan dengan ❤️ menggunakan 
-      <a href="https://adminlte.io" class="text-decoration-none fw-bold">AdminLTE</a>
-    </span>
+   
     <!--end::Credits-->
   </div>
 </footer>

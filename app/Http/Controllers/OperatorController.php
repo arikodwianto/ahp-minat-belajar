@@ -13,8 +13,13 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\SiswaImport;
 use App\Models\PerbandinganKriteria;
-
+use App\Models\Alternatif;
+use App\Models\Pertanyaan;
+use App\Models\Jawaban;
+use App\Models\HasilKuisioner;
+use App\Models\PerbandinganAlternatif;
 use App\Models\HasilAHP;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 
@@ -407,7 +412,667 @@ public function showSiswa($id)
 
         return redirect()->route('operator.kelas.index')->with('success', 'Data kelas berhasil dihapus.');
     }
+    // ================================
+    // CRUD ALTERNATIF
+    // ================================
+  // ================================
+    // CRUD ALTERNATIF
+    // ================================
+    public function indexAlternatif()
+    {
+        $alternatifs = Alternatif::all();
+        return view('operator.alternatif.index', compact('alternatifs'));
+    }
+
+    public function createAlternatif()
+    {
+        return view('operator.alternatif.create');
+    }
+
+   public function storeAlternatif(Request $request)
+{
+    $request->validate([
+        'nama' => 'required|string|max:255',
+    ]);
+
+    // Hitung jumlah data alternatif yang sudah ada
+    $count = Alternatif::count() + 1;
+    $kode = 'A' . str_pad($count, 2, '0', STR_PAD_LEFT);
+
+    // Simpan data
+    Alternatif::create([
+        'nama' => $request->nama,
+        'kode' => $kode
+    ]);
+
+    return redirect()->route('alternatif.index')
+        ->with('success', 'Alternatif berhasil ditambahkan');
 }
+
+
+    public function editAlternatif($id)
+    {
+        $alternatif = Alternatif::findOrFail($id);
+        return view('operator.alternatif.edit', compact('alternatif'));
+    }
+
+   public function updateAlternatif(Request $request, $id)
+{
+    $alternatif = Alternatif::findOrFail($id);
+
+    $request->validate([
+        'nama' => 'required|string|max:255',
+    ]);
+
+    $alternatif->update([
+        'nama' => $request->nama
+        // kode jangan diubah
+    ]);
+
+    return redirect()->route('alternatif.index')
+        ->with('success', 'Alternatif berhasil diperbarui');
+}
+
+
+    public function destroyAlternatif($id)
+    {
+        Alternatif::findOrFail($id)->delete();
+        return redirect()->route('alternatif.index')->with('success', 'Alternatif berhasil dihapus');
+    }
+
+
+    // ================================
+    // CRUD PERTANYAAN
+    // ================================
+    public function indexPertanyaan()
+    {
+        $pertanyaans = Pertanyaan::with('kriteria')->get();
+        return view('operator.pertanyaan.index', compact('pertanyaans'));
+    }
+
+    public function createPertanyaan()
+    {
+        $kriterias = Kriteria::all();
+        return view('operator.pertanyaan.create', compact('kriterias'));
+    }
+
+    public function storePertanyaan(Request $request)
+    {
+        $request->validate([
+            'kriteria_id' => 'required|exists:kriterias,id',
+            'teks' => 'required|string',
+        ]);
+
+        Pertanyaan::create($request->only(['kriteria_id','teks']));
+        return redirect()->route('pertanyaan.index')->with('success', 'Pertanyaan berhasil ditambahkan');
+    }
+
+    public function editPertanyaan($id)
+    {
+        $pertanyaan = Pertanyaan::findOrFail($id);
+        $kriterias = Kriteria::all();
+        return view('operator.pertanyaan.edit', compact('pertanyaan', 'kriterias'));
+    }
+
+    public function updatePertanyaan(Request $request, $id)
+    {
+        $pertanyaan = Pertanyaan::findOrFail($id);
+
+        $request->validate([
+            'kriteria_id' => 'required|exists:kriterias,id',
+            'teks' => 'required|string',
+        ]);
+
+        $pertanyaan->update($request->only(['kriteria_id','teks']));
+        return redirect()->route('pertanyaan.index')->with('success', 'Pertanyaan berhasil diperbarui');
+    }
+
+    public function destroyPertanyaan($id)
+    {
+        Pertanyaan::findOrFail($id)->delete();
+        return redirect()->route('pertanyaan.index')->with('success', 'Pertanyaan berhasil dihapus');
+    }
+
+
+    // ================================
+    // CRUD JAWABAN (Pilihan Jawaban Pertanyaan)
+    // ================================
+    public function indexJawaban()
+    {
+        $jawabans = Jawaban::with('pertanyaan', 'alternatif')->get();
+        return view('operator.jawaban.index', compact('jawabans'));
+    }
+
+    public function createJawaban()
+    {
+        $pertanyaans = Pertanyaan::all();
+        $alternatifs = Alternatif::all();
+        return view('operator.jawaban.create', compact('pertanyaans', 'alternatifs'));
+    }
+
+    public function storeJawaban(Request $request)
+    {
+        $request->validate([
+            'pertanyaan_id' => 'required|exists:pertanyaans,id',
+            'alternatif_id' => 'required|exists:alternatifs,id',
+            'teks' => 'required|string',
+            'nilai' => 'required|numeric|min:1',
+        ]);
+
+        Jawaban::create($request->only(['pertanyaan_id','alternatif_id','teks','nilai']));
+        return redirect()->route('jawaban.index')->with('success', 'Jawaban berhasil ditambahkan');
+    }
+
+    public function editJawaban($id)
+    {
+        $jawaban = Jawaban::findOrFail($id);
+        $pertanyaans = Pertanyaan::all();
+        $alternatifs = Alternatif::all();
+        return view('operator.jawaban.edit', compact('jawaban', 'pertanyaans', 'alternatifs'));
+    }
+
+    public function updateJawaban(Request $request, $id)
+    {
+        $jawaban = Jawaban::findOrFail($id);
+
+        $request->validate([
+            'pertanyaan_id' => 'required|exists:pertanyaans,id',
+            'alternatif_id' => 'required|exists:alternatifs,id',
+            'teks' => 'required|string',
+            'nilai' => 'required|numeric|min:1',
+        ]);
+
+        $jawaban->update($request->only(['pertanyaan_id','alternatif_id','teks','nilai']));
+        return redirect()->route('jawaban.index')->with('success', 'Jawaban berhasil diperbarui');
+    }
+
+    public function destroyJawaban($id)
+    {
+        Jawaban::findOrFail($id)->delete();
+        return redirect()->route('jawaban.index')->with('success', 'Jawaban berhasil dihapus');
+    }
+
+
+    // ================================
+    // FORM KUISIONER SISWA
+    // ================================
+    public function isiForm($siswaId)
+    {
+        $siswa = Siswa::findOrFail($siswaId);
+        $pertanyaans = Pertanyaan::with('jawabans')->get();
+        return view('operator.kuisioner.isi', compact('siswa', 'pertanyaans'));
+    }
+
+    public function simpanForm(Request $request, $siswaId)
+    {
+        $siswa = Siswa::findOrFail($siswaId);
+
+        foreach ($request->jawaban as $pertanyaanId => $jawabanId) {
+            HasilKuisioner::updateOrCreate(
+                [
+                    'siswa_id' => $siswa->id,
+                    'pertanyaan_id' => $pertanyaanId,
+                ],
+                [
+                    'jawaban_id' => $jawabanId,
+                ]
+            );
+        }
+
+        return redirect()->route('kuisioner.hasil', $siswa->id)
+            ->with('success', 'Kuisioner berhasil disimpan');
+    }
+
+    public function hasil($siswaId)
+    {
+        $siswa = Siswa::findOrFail($siswaId);
+        $hasil = HasilKuisioner::with('pertanyaan.kriteria','jawaban.alternatif')
+                    ->where('siswa_id',$siswaId)->get();
+
+        return view('operator.kuisioner.hasil', compact('siswa','hasil'));
+    }
+
+     // Tampilkan daftar siswa
+    public function indexPerbandinganAlternatif()
+    {
+        $siswas = Siswa::all();
+        return view('operator.perbandingan_alternatif.index', compact('siswas'));
+    }
+
+    // Form input perbandingan alternatif per siswa
+   public function createPerbandinganAlternatif($siswa_id)
+{
+    $siswa = Siswa::findOrFail($siswa_id);
+    $kriterias = Kriteria::all();
+    $alternatifs = Alternatif::all();
+
+    // Ambil perbandingan yang sudah tersimpan
+    $existingPerbandingan = PerbandinganAlternatif::where('siswa_id', $siswa_id)->get();
+
+    // Membuat array untuk mudah diakses di form: [kriteria_id][alt1_id][alt2_id] = data
+    $perbandinganData = [];
+    foreach ($existingPerbandingan as $p) {
+        $perbandinganData[$p->kriteria_id][$p->alternatif1_id][$p->alternatif2_id] = [
+            'nilai' => $p->nilai,
+            'pilihan' => $p->pilihan,
+            'alasan' => $p->alasan,
+        ];
+    }
+
+    return view('operator.perbandingan_alternatif.create', compact(
+        'siswa', 'kriterias', 'alternatifs', 'perbandinganData'
+    ));
+}
+
+
+    // Simpan hasil perbandingan alternatif
+    public function storePerbandinganAlternatif(Request $request, $siswa_id)
+    {
+        $siswa = Siswa::findOrFail($siswa_id);
+        $alternatifs = Alternatif::all();
+        $kriteria_id = $request->input('kriteria_id');
+
+        $request->validate([
+            'kriteria_id' => 'required|exists:kriterias,id',
+        ]);
+
+        // Hapus perbandingan lama untuk siswa & kriteria ini
+        PerbandinganAlternatif::where('siswa_id', $siswa_id)
+            ->where('kriteria_id', $kriteria_id)
+            ->delete();
+
+        // Loop semua pasangan alternatif (i < j)
+        foreach ($alternatifs as $i => $alt1) {
+            foreach ($alternatifs as $j => $alt2) {
+                if ($i < $j) {
+                    $nilai = $request->input("alternatif_{$alt1->id}_vs_{$alt2->id}", 1);
+
+                    // Ambil pilihan dari input radio
+                    $pilihan = $request->input("pilihan_{$alt1->id}_vs_{$alt2->id}", $alt1->id);
+
+                    // Ambil alasan dari input text
+                    $alasan = $request->input("alasan_{$alt1->id}_vs_{$alt2->id}");
+
+                    // Simpan arah normal
+                    PerbandinganAlternatif::create([
+                        'siswa_id'       => $siswa_id,
+                        'kriteria_id'    => $kriteria_id,
+                        'alternatif1_id' => $alt1->id,
+                        'alternatif2_id' => $alt2->id,
+                        'pilihan'        => $pilihan,
+                        'nilai'          => $nilai,
+                        'alasan'         => $alasan,
+                    ]);
+
+                    // Simpan arah kebalikan
+                    PerbandinganAlternatif::create([
+                        'siswa_id'       => $siswa_id,
+                        'kriteria_id'    => $kriteria_id,
+                        'alternatif1_id' => $alt2->id,
+                        'alternatif2_id' => $alt1->id,
+                        'pilihan'        => ($pilihan == $alt1->id) ? $alt2->id : $alt1->id,
+                        'nilai'          => 1 / $nilai,
+                        'alasan'         => $alasan,
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->route('perbandingan_alternatif.create', $siswa_id)
+            ->with('success', 'Perbandingan alternatif berhasil disimpan!');
+    }
+
+    // Lihat semua perbandingan alternatif + hitung bobot AHP
+    public function showPerbandinganAlternatif($siswa_id)
+    {
+        $siswa = Siswa::findOrFail($siswa_id);
+        $perbandingans = PerbandinganAlternatif::where('siswa_id', $siswa_id)->get();
+        $kriterias = Kriteria::all();
+        $alternatifs = Alternatif::all();
+
+        $hasilAHP = [];
+
+        foreach ($kriterias as $kriteria) {
+            $n = $alternatifs->count();
+
+            // Inisialisasi matriks simetris
+            $matrix = [];
+            foreach ($alternatifs as $i) {
+                foreach ($alternatifs as $j) {
+                    $matrix[$i->id][$j->id] = ($i->id === $j->id) ? 1 : null;
+                }
+            }
+
+            // Isi matriks dari perbandingan
+            $perbandinganKriteria = $perbandingans->where('kriteria_id', $kriteria->id);
+            foreach ($perbandinganKriteria as $p) {
+                $a = $p->alternatif1_id;
+                $b = $p->alternatif2_id;
+                $nilai = $p->nilai;
+
+               if ($nilai == 0) {
+    $nilai = 0.01; // default kecil untuk menghindari division by zero
+}
+
+if ($p->pilihan == $a) {
+    $matrix[$a][$b] = $nilai;
+    $matrix[$b][$a] = 1 / $nilai;
+} else {
+    $matrix[$a][$b] = 1 / $nilai;
+    $matrix[$b][$a] = $nilai;
+}
+            }
+
+            // Ambil daftar ID alternatif
+            $altIds = $alternatifs->pluck('id')->toArray();
+
+            // Hitung geometric mean
+$geomMeans = [];
+foreach ($matrix as $i_id => $row) {
+    $rowValues = array_map(fn($v) => $v ?? 1, $row); // null diganti 1
+    $geomMeans[] = pow(array_product($rowValues), 1 / $n);
+}
+
+// Buat bobot keyed by ID alternatif
+$sumGeom = array_sum($geomMeans);
+$bobot = [];
+
+if ($sumGeom == 0) {
+    foreach ($altIds as $id) {
+        $bobot[$id] = 1 / count($altIds); // bobot sama rata
+    }
+} else {
+    foreach ($altIds as $index => $id) {
+        $bobot[$id] = $geomMeans[$index] / $sumGeom;
+    }
+}
+
+            // Hitung Consistency Ratio (CR)
+            $lambdaMax = 0;
+foreach ($matrix as $i_id => $row) {
+    $rowSum = 0;
+    foreach ($row as $j_id => $value) {
+        $rowSum += $value * $bobot[$j_id];
+    }
+    $lambdaMax += ($bobot[$i_id] != 0) ? ($rowSum / $bobot[$i_id]) : 0;
+}
+
+$lambdaMax /= $n;
+
+$CI = ($n > 1) ? ($lambdaMax - $n) / ($n - 1) : 0;
+$RI_table = [0,0,0.58,0.9,1.12,1.24,1.32,1.41,1.45,1.49];
+$RI = $RI_table[$n] ?? 1.49;
+$CR = ($RI != 0) ? $CI / $RI : 0;
+
+
+            // Simpan hasil
+            $hasilAHP[$kriteria->id] = [
+                'bobot' => $bobot,
+                'CR' => $CR,
+            ];
+        }
+
+        return view('operator.perbandingan_alternatif.show', compact(
+            'siswa', 'perbandingans', 'kriterias', 'alternatifs', 'hasilAHP'
+        ));
+    }
+
+    public function indexHasilSiswa()
+{
+    $siswas = Siswa::all();
+    $kriterias = Kriteria::all();
+    $alternatifs = Alternatif::all();
+
+    $siswaPerAlternatif = []; // array hasil pengelompokan siswa
+    $totalScoreAll = [];      // array untuk diagram
+
+    // Inisialisasi chart
+    $chartLabels = $alternatifs->pluck('nama')->toArray();
+    $chartData = array_fill(0, count($chartLabels), 0);
+
+    foreach ($siswas as $siswa) {
+        $perbandingans = PerbandinganAlternatif::where('siswa_id', $siswa->id)->get();
+        $totalScoreAlternatif = [];
+
+        foreach ($kriterias as $kriteria) {
+            $n = $alternatifs->count();
+            if ($n == 0) continue; // jika tidak ada alternatif, skip
+
+            // Inisialisasi matriks simetris
+            $matrix = [];
+            foreach ($alternatifs as $i) {
+                foreach ($alternatifs as $j) {
+                    $matrix[$i->id][$j->id] = ($i->id === $j->id) ? 1 : 0.01; // default 0.01 untuk menghindari null
+                }
+            }
+
+            // Isi matriks dari perbandingan
+            $perbandinganKriteria = $perbandingans->where('kriteria_id', $kriteria->id);
+            if ($perbandinganKriteria->count() == 0) {
+                // jika tidak ada perbandingan, set semua bobot sama rata
+                $geomMeans = array_fill(0, $n, 1);
+            } else {
+                foreach ($perbandinganKriteria as $p) {
+                    $a = $p->alternatif1_id;
+                    $b = $p->alternatif2_id;
+                    $nilai = $p->nilai ?: 0.01;
+
+                    if ($p->pilihan == $a) {
+                        $matrix[$a][$b] = $nilai;
+                        $matrix[$b][$a] = 1 / $nilai;
+                    } else {
+                        $matrix[$a][$b] = 1 / $nilai;
+                        $matrix[$b][$a] = $nilai;
+                    }
+                }
+
+                // Hitung geometric mean
+                $geomMeans = [];
+                foreach ($matrix as $i_id => $row) {
+                    $geomMeans[] = pow(array_product($row), 1 / $n);
+                }
+            }
+
+            // Bobot alternatif
+            $sumGeom = array_sum($geomMeans);
+            if ($sumGeom == 0) $sumGeom = 0.0001; // aman dari division by zero
+
+            foreach ($alternatifs as $index => $alt) {
+                $bobot = $geomMeans[$index] / $sumGeom;
+                if (!isset($totalScoreAlternatif[$alt->id])) {
+                    $totalScoreAlternatif[$alt->id] = 0;
+                }
+                $totalScoreAlternatif[$alt->id] += $bobot;
+            }
+        }
+
+        // Tentukan alternatif terbaik
+        if (!empty($totalScoreAlternatif)) {
+            $maxScore = max($totalScoreAlternatif);
+            $alternatifTerbaikId = array_search($maxScore, $totalScoreAlternatif);
+            $alternatifTerbaik = Alternatif::find($alternatifTerbaikId);
+
+            if ($alternatifTerbaik) {
+                $siswaPerAlternatif[$alternatifTerbaik->nama][] = $siswa;
+            }
+            // Simpan untuk diagram
+            foreach ($totalScoreAlternatif as $altId => $score) {
+                if (!isset($totalScoreAll[$altId])) {
+                    $totalScoreAll[$altId] = 0;
+                }
+                $totalScoreAll[$altId] += $score;
+            }
+        }
+    }
+    // Hanya ambil alternatif yang memiliki skor > 0
+    $chartLabels = [];
+    $chartData = [];
+    foreach ($totalScoreAll as $altId => $score) {
+        if ($score > 0) {
+            $alt = Alternatif::find($altId);
+            $chartLabels[] = $alt->nama;
+            $chartData[] = $score;
+        }
+    }
+    return view('operator.perbandingan_alternatif.hasil_semua', compact(
+        'siswaPerAlternatif', 'alternatifs', 'chartLabels', 'chartData'
+    ));
+}
+
+    // Cetak PDF hasil perbandingan alternatif untuk satu siswa
+
+
+public function cetakPdfHasilSiswa()
+{
+    $siswas = Siswa::all();
+    $kriterias = Kriteria::all();
+    $alternatifs = Alternatif::all();
+
+    $siswaPerAlternatif = [];
+
+    foreach ($siswas as $siswa) {
+        $perbandingans = PerbandinganAlternatif::where('siswa_id', $siswa->id)->get();
+        $totalScoreAlternatif = [];
+
+        foreach ($kriterias as $kriteria) {
+            $n = $alternatifs->count();
+            if ($n == 0) continue;
+
+            $matrix = [];
+            foreach ($alternatifs as $i) {
+                foreach ($alternatifs as $j) {
+                    $matrix[$i->id][$j->id] = ($i->id === $j->id) ? 1 : 0.01;
+                }
+            }
+
+            $perbandinganKriteria = $perbandingans->where('kriteria_id', $kriteria->id);
+            if ($perbandinganKriteria->count() == 0) {
+                $geomMeans = array_fill(0, $n, 1);
+            } else {
+                foreach ($perbandinganKriteria as $p) {
+                    $a = $p->alternatif1_id;
+                    $b = $p->alternatif2_id;
+                    $nilai = $p->nilai ?: 0.01;
+
+                    if ($p->pilihan == $a) {
+                        $matrix[$a][$b] = $nilai;
+                        $matrix[$b][$a] = 1 / $nilai;
+                    } else {
+                        $matrix[$a][$b] = 1 / $nilai;
+                        $matrix[$b][$a] = $nilai;
+                    }
+                }
+
+                $geomMeans = [];
+                foreach ($matrix as $i_id => $row) {
+                    $geomMeans[] = pow(array_product($row), 1 / $n);
+                }
+            }
+
+            $sumGeom = array_sum($geomMeans);
+            if ($sumGeom == 0) $sumGeom = 0.0001;
+
+            foreach ($alternatifs as $index => $alt) {
+                $bobot = $geomMeans[$index] / $sumGeom;
+                if (!isset($totalScoreAlternatif[$alt->id])) {
+                    $totalScoreAlternatif[$alt->id] = 0;
+                }
+                $totalScoreAlternatif[$alt->id] += $bobot;
+            }
+        }
+
+        if (!empty($totalScoreAlternatif)) {
+            $maxScore = max($totalScoreAlternatif);
+            $alternatifTerbaikId = array_search($maxScore, $totalScoreAlternatif);
+            $alternatifTerbaik = Alternatif::find($alternatifTerbaikId);
+
+            if ($alternatifTerbaik) {
+                $siswaPerAlternatif[$alternatifTerbaik->nama][] = $siswa;
+            }
+        }
+    }
+
+    $pdf = PDF::loadView('operator.perbandingan_alternatif.hasil_pdf', compact(
+        'siswaPerAlternatif', 'alternatifs'
+    ));
+
+    return $pdf->download('hasil_perbandingan_siswa.pdf');
+}
+
+public function cetakPerbandingan($siswa_id)
+{
+    $siswa = Siswa::findOrFail($siswa_id);
+    $perbandingans = PerbandinganAlternatif::where('siswa_id', $siswa_id)->get();
+    $kriterias = Kriteria::all();
+    $alternatifs = Alternatif::all();
+
+    $hasilAHP = [];
+
+    foreach ($kriterias as $kriteria) {
+        $n = $alternatifs->count();
+        $matrix = [];
+        foreach ($alternatifs as $i) {
+            foreach ($alternatifs as $j) {
+                $matrix[$i->id][$j->id] = ($i->id === $j->id) ? 1 : null;
+            }
+        }
+
+        $perbandinganKriteria = $perbandingans->where('kriteria_id', $kriteria->id);
+        foreach ($perbandinganKriteria as $p) {
+            $a = $p->alternatif1_id;
+            $b = $p->alternatif2_id;
+            $nilai = $p->nilai ?: 0.01;
+
+            if ($p->pilihan == $a) {
+                $matrix[$a][$b] = $nilai;
+                $matrix[$b][$a] = 1 / $nilai;
+            } else {
+                $matrix[$a][$b] = 1 / $nilai;
+                $matrix[$b][$a] = $nilai;
+            }
+        }
+
+        $altIds = $alternatifs->pluck('id')->toArray();
+        $geomMeans = [];
+        foreach ($matrix as $i_id => $row) {
+            $geomMeans[] = pow(array_product($row), 1 / $n);
+        }
+
+        $sumGeom = array_sum($geomMeans);
+        $bobot = [];
+        foreach ($altIds as $index => $id) {
+            $bobot[$id] = $geomMeans[$index] / $sumGeom;
+        }
+
+        $lambdaMax = 0;
+        foreach ($matrix as $i_id => $row) {
+            $rowSum = 0;
+            foreach ($row as $j_id => $value) {
+                $rowSum += $value * $bobot[$j_id];
+            }
+            $lambdaMax += ($bobot[$i_id] != 0) ? ($rowSum / $bobot[$i_id]) : 0;
+        }
+        $lambdaMax /= $n;
+        $CI = ($n > 1) ? ($lambdaMax - $n) / ($n - 1) : 0;
+        $RI_table = [0,0,0.58,0.9,1.12,1.24,1.32,1.41,1.45,1.49];
+        $RI = $RI_table[$n] ?? 1.49;
+        $CR = ($RI != 0) ? $CI / $RI : 0;
+
+        $hasilAHP[$kriteria->id] = [
+            'bobot' => $bobot,
+            'CR' => $CR,
+        ];
+    }
+
+    $pdf = Pdf::loadView('operator.perbandingan_alternatif.cetak_pdf', compact(
+        'siswa', 'perbandingans', 'kriterias', 'alternatifs', 'hasilAHP'
+    ));
+
+    return $pdf->stream("laporan_perbandingan_{$siswa->nama}.pdf");
+}
+
+}
+
 
 
 
