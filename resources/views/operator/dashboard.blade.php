@@ -48,7 +48,7 @@
 
                 <!-- Tombol Aksi -->
                 <div class="d-flex flex-column flex-md-row gap-2 ms-auto">
-                    <a href="{{ route('profile.edit') }}" class="btn btn-primary btn-lg px-4">
+                    <a href="{{ route('operator.profile.edit') }}" class="btn btn-primary btn-lg px-4">
                         <i class="bi bi-person-lines-fill me-2"></i> Lihat Profil
                     </a>
 
@@ -74,7 +74,7 @@
                 <h3>{{ $jumlahGuru }}</h3>
                 <p>Jumlah Guru</p>
             </div>
-            <i class="bi bi-person-badge small-box-icon"></i>
+            <i class="bi bi-mortarboard-fill small-box-icon"></i>
             <a href="{{ route('operator.guru.index') }}" class="small-box-footer link-light">
                 Lihat Detail <i class="bi bi-arrow-right-circle"></i>
             </a>
@@ -88,7 +88,7 @@
                 <h3>{{ $jumlahSiswa }}</h3>
                 <p>Jumlah Siswa</p>
             </div>
-            <i class="bi bi-people small-box-icon"></i>
+            <i class="bi bi-people-fill small-box-icon"></i>
             <a href="{{ route('operator.siswa.index') }}" class="small-box-footer link-light">
                 Lihat Detail <i class="bi bi-arrow-right-circle"></i>
             </a>
@@ -102,7 +102,7 @@
                 <h3>{{ $jumlahKelas }}</h3>
                 <p>Jumlah Kelas</p>
             </div>
-            <i class="bi bi-building small-box-icon"></i>
+            <i class="bi bi-door-open-fill small-box-icon"></i>
             <a href="{{ route('operator.kelas.index') }}" class="small-box-footer link-dark">
                 Lihat Detail <i class="bi bi-arrow-right-circle"></i>
             </a>
@@ -116,13 +116,28 @@
                 <h3>{{ $jumlahKriteria }}</h3>
                 <p>Jumlah Kriteria</p>
             </div>
-            <i class="bi bi-diagram-3-fill small-box-icon"></i>
+            <i class="bi bi-list-check small-box-icon"></i>
             <a href="{{ route('operator.kriteria.index') }}" class="small-box-footer link-light">
                 Lihat Detail <i class="bi bi-arrow-right-circle"></i>
             </a>
         </div>
     </div>
+
+    <!-- Alternatif -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box text-bg-info shadow rounded">
+            <div class="inner">
+                <h3>{{ $jumlahAlternatif }}</h3>
+                <p>Jumlah Alternatif</p>
+            </div>
+            <i class="bi bi-shuffle small-box-icon"></i>
+            <a href="{{ route('perbandingan_alternatif.hasil-siswa') }}" class="small-box-footer link-light">
+                Lihat Detail <i class="bi bi-arrow-right-circle"></i>
+            </a>
+        </div>
+    </div>
 </div>
+
 
 </main>
 <script>

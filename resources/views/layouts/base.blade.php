@@ -87,76 +87,74 @@
   <!--begin::Body-->
   <body class="layout-fixed sidebar-expand-lg sidebar-open bg-body-tertiary">
     <!--begin::App Wrapper-->
+   <!--begin::App Wrapper-->
     <div class="app-wrapper">
       <!--begin::Header-->
-      <nav class="app-header navbar navbar-expand bg-body">
-        <!--begin::Container-->
-        <div class="container-fluid">
-          <!--begin::Start Navbar Links-->
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
-                <i class="bi bi-list"></i>
-              </a>
-            </li>
-           
-          </ul>
-          <!--end::Start Navbar Links-->
-          <!--begin::End Navbar Links-->
-          <ul class="navbar-nav ms-auto">
-           
-           
-            <!--begin::Fullscreen Toggle-->
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-lte-toggle="fullscreen">
-                <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
-                <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
-              </a>
-            </li>
-            <!--end::Fullscreen Toggle-->
-            <!--begin::User Menu Dropdown-->
-           <li class="nav-item dropdown user-menu">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-    <i class="bi bi-person-circle fs-4 me-2"></i>
-    <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
-  </a>
-</li>
+    <nav class="app-header navbar navbar-expand bg-body">
+  <!--begin::Container-->
+  <div class="container-fluid d-flex align-items-center justify-content-between">
+    <!--begin::Start Navbar Links-->
+    <ul class="navbar-nav d-flex align-items-center">
+      <li class="nav-item">
+        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+          <i class="bi bi-list fs-4"></i>
+        </a>
+      </li>
+    </ul>
+    <!--end::Start Navbar Links-->
 
-                <!--end::User Image-->
-                <!--begin::Menu Body-->
-               
-            <!--end::User Menu Dropdown-->
-          </ul>
-          <!--end::End Navbar Links-->
-        </div>
-        <!--end::Container-->
-      </nav>
+    <!--begin::End Navbar Links-->
+    <ul class="navbar-nav d-flex align-items-center ms-auto">
+      <!--begin::Fullscreen Toggle-->
+      <li class="nav-item">
+        <a class="nav-link d-flex align-items-center" href="#" data-lte-toggle="fullscreen">
+          <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen fs-5"></i>
+          <i data-lte-icon="minimize" class="bi bi-fullscreen-exit fs-5 d-none"></i>
+        </a>
+      </li>
+      <!--end::Fullscreen Toggle-->
+
+      <!--begin::User Menu Dropdown-->
+      <li class="nav-item dropdown user-menu">
+        <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
+          <i class="bi bi-person-circle fs-4 me-2"></i>
+          <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
+        </a>
+      </li>
+      <!--end::User Menu Dropdown-->
+    </ul>
+    <!--end::End Navbar Links-->
+  </div>
+  <!--end::Container-->
+</nav>
+
       <!--end::Header-->
       <!--begin::Sidebar-->
       <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
         <!--begin::Sidebar Brand-->
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
-          <a href="./index.html" class="brand-link">
-            <!--begin::Brand Image-->
-           <img
-  src="{{ asset('lte/dist/assets/img/AdminLTELogo.png') }}"
-  alt="AdminLTE Logo"
-  class="brand-image opacity-75 shadow"
-/>
+         <a href="{{ route('operator.dashboard') }}" class="brand-link d-flex align-items-center">
+    <!-- Logo -->
+    <img
+        src="{{ asset('logo/Lambang_Kota_Tanjungpinang.png') }}"
+        alt="Logo"
+        class="opacity-75 shadow me-2"
+        style="width: 35px; height: 35px; object-fit: contain;"
+    />
 
-            <!--end::Brand Image-->
-            <!--begin::Brand Text-->
-            <span class="brand-text fw-light">AdminLTE 4</span>
-            <!--end::Brand Text-->
-          </a>
+    <!-- Teks -->
+    <span class="brand-text fw-light" style="font-size: 16px; white-space: nowrap;">
+        SDN 02 TANJUNGPINANG
+    </span>
+</a>
+
           <!--end::Brand Link-->
         </div>
-        <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
         
         <div class="sidebar-wrapper">
-         <nav class="mt-2">
+       <nav class="mt-2">
   <!-- Sidebar Menu -->
   <ul
     class="nav sidebar-menu flex-column"
@@ -165,53 +163,71 @@
     aria-label="Main navigation"
     data-accordion="false"
     id="navigation"
->
+  >
     <li class="nav-header">Dashboard</li>
     <li class="nav-item border-bottom">
-        <a href="{{ route('guru.dashboard') }}"
-           class="nav-link {{ request()->routeIs('guru.dashboard') ? 'active bg-primary text-white' : '' }}">
-            <i class="nav-icon bi bi-house-door-fill"></i>
-            <p>Home</p>
-        </a>
+      <a href="{{ route('guru.dashboard') }}"
+         class="nav-link {{ request()->routeIs('guru.dashboard') ? 'active bg-primary text-white' : '' }}">
+        <i class="nav-icon bi bi-speedometer2"></i>
+        <p>Home</p>
+      </a>
     </li>
 
     <li class="nav-header">Data Master</li>
     <!-- Data Siswa -->
-    <li class="nav-item border-bottom {{ request()->routeIs('operator.siswa.*') ? 'menu-open' : '' }}">
-        <a href="#"
-           class="nav-link {{ request()->routeIs('operator.siswa.*') ? 'active bg-success text-white' : '' }}">
-            <i class="nav-icon bi bi-people-fill"></i>
-            <p>
-                Data Siswa
-                <i class="nav-arrow bi bi-chevron-right"></i>
-            </p>
-        </a>
-        <ul class="nav nav-treeview">
-            <li class="nav-item">
-                <a href="{{ route('guru.index.siswa') }}"
-                   class="nav-link {{ request()->routeIs('guru.index.siswa') ? 'active fw-bold text-success' : '' }}">
-                    <i class="nav-icon bi bi-dot"></i>
-                    <p>Daftar Siswa</p>
-                </a>
-            </li>
-        </ul>
+    <li class="nav-item border-bottom">
+      <a href="{{ route('guru.siswa.index') }}"
+         class="nav-link {{ request()->routeIs('guru.siswa.*') ? 'active bg-primary text-white' : '' }}">
+        <i class="nav-icon bi bi-people-fill"></i>
+        <p>Data Siswa</p>
+      </a>
     </li>
-
-  
 
     <li class="nav-header">Seleksi AHP</li>
-   
-
+    <!-- Kriteria -->
     <li class="nav-item border-bottom">
-        <a href="{{ route('guru.hasil.ahp') }}"
-           class="nav-link {{ request()->routeIs('guru.hasil.ahp') ? 'active bg-info text-white' : '' }}">
-            <i class="nav-icon bi bi-bar-chart-line"></i>
-            <p>Hasil Perhitungan Kriteria</p>
-        </a>
+      <a href="{{ route('guru.kriteria.index') }}"
+         class="nav-link {{ request()->routeIs('guru.kriteria.*') ? 'active bg-primary text-white' : '' }}">
+        <i class="nav-icon bi bi-list-check"></i>
+        <p>Daftar Kriteria</p>
+      </a>
     </li>
-</ul>
 
+    <!-- Alternatif & Perbandingan -->
+    <li class="nav-item border-bottom {{ request()->routeIs('guru.alternatif.*') || request()->routeIs('guru.perbandingan_alternatif.*') ? 'menu-open' : '' }}">
+      <a href="#"
+         class="nav-link {{ request()->routeIs('guru.alternatif.*') || request()->routeIs('guru.perbandingan_alternatif.*') ? 'active bg-primary text-white' : '' }}">
+        <i class="nav-icon bi bi-diagram-3"></i>
+        <p>
+          Alternatif
+          <i class="nav-arrow bi bi-chevron-right"></i>
+        </p>
+      </a>
+
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="{{ route('guru.alternatif.index') }}"
+             class="nav-link {{ request()->routeIs('guru.alternatif.*') ? 'active bg-primary text-white' : '' }}">
+            <i class="nav-icon bi bi-list-ul"></i>
+            <p>Daftar Alternatif</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="{{ route('guru.perbandingan_alternatif.index') }}"
+             class="nav-link {{ request()->routeIs('guru.perbandingan_alternatif.*') ? 'active bg-primary text-white' : '' }}">
+            <i class="nav-icon bi bi-sliders"></i>
+            <p>Perhitungan Alternatif</p>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    
+  </ul>
 </nav>
+
+
 
         </div>
         <!--end::Sidebar Wrapper-->

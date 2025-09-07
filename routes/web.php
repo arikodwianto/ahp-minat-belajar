@@ -46,6 +46,10 @@ Route::get('/operator/siswa/template', function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:operator'])->group(function () {
+     Route::get('/operator/profile', [OperatorController::class, 'edit'])->name('operator.profile.edit');
+    Route::patch('/operator/profile', [OperatorController::class, 'update'])->name('operator.profile.update');
+    Route::delete('/operator/profile', [OperatorController::class, 'destroy'])->name('operator.profile.destroy');
+    
 
     // Dashboard Operator
     Route::get('/operator/dashboard', [OperatorController::class, 'dashboard'])->name('operator.dashboard');
@@ -176,23 +180,49 @@ Route::prefix('operator/perbandingan-alternatif')->name('perbandingan_alternatif
 | Guru Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:guru'])->group(function () {
-    Route::get('/guru/dashboard', [GuruController::class, 'dashboard'])->name('guru.dashboard');
-    Route::get('/guru/hasil-ahp', [GuruController::class, 'hasilAHP'])->name('guru.hasil.ahp');
-    Route::get('/guru/siswa', [GuruController::class, 'indexSiswa'])->name('guru.index.siswa');
+
+
+Route::prefix('guru')->name('guru.')->middleware(['auth', 'role:guru'])->group(function () {
+
+    // Dashboard
+    Route::get('/dashboard', [GuruController::class, 'dashboard'])->name('dashboard');
+
+    // Profil Guru
+    Route::get('/profile/edit', [GuruController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/update', [GuruController::class, 'update'])->name('profile.update');
+    Route::delete('/profile/destroy', [GuruController::class, 'destroy'])->name('profile.destroy');
+
+    // Hasil AHP
+    Route::get('/hasil-ahp', [GuruController::class, 'hasilAHP'])->name('hasil-ahp');
+
+    // Siswa
+    Route::get('/siswa', [GuruController::class, 'indexSiswa'])->name('siswa.index');
+    Route::get('/siswa/{id}', [GuruController::class, 'showSiswa'])->name('siswa.show');
+
+    // Alternatif
+    Route::get('/alternatif', [GuruController::class, 'indexAlternatif'])->name('alternatif.index');
+
+    // Kriteria
+    Route::get('/kriteria', [GuruController::class, 'indexKriteria'])->name('kriteria.index');
+
+    // Perbandingan Alternatif
+    Route::get('/perbandingan-alternatif', [GuruController::class, 'indexPerbandinganAlternatif'])
+        ->name('perbandingan_alternatif.index');
+    Route::get('/perbandingan-alternatif/create/{siswa_id}', [GuruController::class, 'createPerbandinganAlternatif'])
+        ->name('perbandingan_alternatif.create');
+    Route::post('/perbandingan-alternatif/store/{siswa_id}', [GuruController::class, 'storePerbandinganAlternatif'])
+        ->name('perbandingan_alternatif.store');
+    Route::get('/perbandingan-alternatif/show/{siswa_id}', [GuruController::class, 'showPerbandinganAlternatif'])
+        ->name('perbandingan_alternatif.show');
+    Route::get('/perbandingan-alternatif/cetak/{siswa_id}', [GuruController::class, 'cetakPerbandingan'])
+        ->name('perbandingan_alternatif.cetak');
 
 });
 
-/*
-|--------------------------------------------------------------------------
-| Profile Routes
-|--------------------------------------------------------------------------
-*/
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+
+
+
+
 
 // Auth routes (login, register, password reset, etc.)
 require __DIR__.'/auth.php';

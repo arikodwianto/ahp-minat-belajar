@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.base')
 
 @section('content')
 <main class="app-main">
@@ -11,7 +11,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-end mb-0">
-                        <li class="breadcrumb-item"><a href="{{ route('operator.dashboard') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('guru.dashboard') }}">Home</a></li>
                         <li class="breadcrumb-item"><a href="{{ route('perbandingan_alternatif.index') }}">Perbandingan</a></li>
                         <li class="breadcrumb-item active">Alternatif</li>
                     </ol>

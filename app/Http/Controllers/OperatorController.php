@@ -14,9 +14,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\SiswaImport;
 use App\Models\PerbandinganKriteria;
 use App\Models\Alternatif;
-use App\Models\Pertanyaan;
-use App\Models\Jawaban;
-use App\Models\HasilKuisioner;
 use App\Models\PerbandinganAlternatif;
 use App\Models\HasilAHP;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -32,10 +29,37 @@ class OperatorController extends Controller
     $jumlahSiswa = Siswa::count();
     $jumlahKelas = Kelas::count();
     $jumlahKriteria = Kriteria::count();
+    $jumlahAlternatif = Alternatif::count();
 
-    return view('operator.dashboard', compact('jumlahGuru', 'jumlahSiswa', 'jumlahKelas', 'jumlahKriteria'));
+    return view('operator.dashboard', compact('jumlahGuru', 'jumlahSiswa', 'jumlahKelas', 'jumlahKriteria', 'jumlahAlternatif'));
 }
+ public function edit(Request $request)
+    {
+        return view('profile.operator', [
+            'user' => $request->user(),
+        ]);
+    }
 
+    public function update(Request $request)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email'],
+        ]);
+
+        $user = $request->user();
+        $user->update($request->only('name', 'email'));
+
+        return redirect()->route('operator.profile.edit')->with('success', 'Profil berhasil diperbarui');
+    }
+
+    public function destroy(Request $request)
+    {
+        $user = $request->user();
+        $user->delete();
+
+        return redirect('/')->with('success', 'Akun berhasil dihapus');
+    }
 
     // ===== CRUD Guru =====
     public function createGuru()
@@ -481,157 +505,6 @@ public function showSiswa($id)
     }
 
 
-    // ================================
-    // CRUD PERTANYAAN
-    // ================================
-    public function indexPertanyaan()
-    {
-        $pertanyaans = Pertanyaan::with('kriteria')->get();
-        return view('operator.pertanyaan.index', compact('pertanyaans'));
-    }
-
-    public function createPertanyaan()
-    {
-        $kriterias = Kriteria::all();
-        return view('operator.pertanyaan.create', compact('kriterias'));
-    }
-
-    public function storePertanyaan(Request $request)
-    {
-        $request->validate([
-            'kriteria_id' => 'required|exists:kriterias,id',
-            'teks' => 'required|string',
-        ]);
-
-        Pertanyaan::create($request->only(['kriteria_id','teks']));
-        return redirect()->route('pertanyaan.index')->with('success', 'Pertanyaan berhasil ditambahkan');
-    }
-
-    public function editPertanyaan($id)
-    {
-        $pertanyaan = Pertanyaan::findOrFail($id);
-        $kriterias = Kriteria::all();
-        return view('operator.pertanyaan.edit', compact('pertanyaan', 'kriterias'));
-    }
-
-    public function updatePertanyaan(Request $request, $id)
-    {
-        $pertanyaan = Pertanyaan::findOrFail($id);
-
-        $request->validate([
-            'kriteria_id' => 'required|exists:kriterias,id',
-            'teks' => 'required|string',
-        ]);
-
-        $pertanyaan->update($request->only(['kriteria_id','teks']));
-        return redirect()->route('pertanyaan.index')->with('success', 'Pertanyaan berhasil diperbarui');
-    }
-
-    public function destroyPertanyaan($id)
-    {
-        Pertanyaan::findOrFail($id)->delete();
-        return redirect()->route('pertanyaan.index')->with('success', 'Pertanyaan berhasil dihapus');
-    }
-
-
-    // ================================
-    // CRUD JAWABAN (Pilihan Jawaban Pertanyaan)
-    // ================================
-    public function indexJawaban()
-    {
-        $jawabans = Jawaban::with('pertanyaan', 'alternatif')->get();
-        return view('operator.jawaban.index', compact('jawabans'));
-    }
-
-    public function createJawaban()
-    {
-        $pertanyaans = Pertanyaan::all();
-        $alternatifs = Alternatif::all();
-        return view('operator.jawaban.create', compact('pertanyaans', 'alternatifs'));
-    }
-
-    public function storeJawaban(Request $request)
-    {
-        $request->validate([
-            'pertanyaan_id' => 'required|exists:pertanyaans,id',
-            'alternatif_id' => 'required|exists:alternatifs,id',
-            'teks' => 'required|string',
-            'nilai' => 'required|numeric|min:1',
-        ]);
-
-        Jawaban::create($request->only(['pertanyaan_id','alternatif_id','teks','nilai']));
-        return redirect()->route('jawaban.index')->with('success', 'Jawaban berhasil ditambahkan');
-    }
-
-    public function editJawaban($id)
-    {
-        $jawaban = Jawaban::findOrFail($id);
-        $pertanyaans = Pertanyaan::all();
-        $alternatifs = Alternatif::all();
-        return view('operator.jawaban.edit', compact('jawaban', 'pertanyaans', 'alternatifs'));
-    }
-
-    public function updateJawaban(Request $request, $id)
-    {
-        $jawaban = Jawaban::findOrFail($id);
-
-        $request->validate([
-            'pertanyaan_id' => 'required|exists:pertanyaans,id',
-            'alternatif_id' => 'required|exists:alternatifs,id',
-            'teks' => 'required|string',
-            'nilai' => 'required|numeric|min:1',
-        ]);
-
-        $jawaban->update($request->only(['pertanyaan_id','alternatif_id','teks','nilai']));
-        return redirect()->route('jawaban.index')->with('success', 'Jawaban berhasil diperbarui');
-    }
-
-    public function destroyJawaban($id)
-    {
-        Jawaban::findOrFail($id)->delete();
-        return redirect()->route('jawaban.index')->with('success', 'Jawaban berhasil dihapus');
-    }
-
-
-    // ================================
-    // FORM KUISIONER SISWA
-    // ================================
-    public function isiForm($siswaId)
-    {
-        $siswa = Siswa::findOrFail($siswaId);
-        $pertanyaans = Pertanyaan::with('jawabans')->get();
-        return view('operator.kuisioner.isi', compact('siswa', 'pertanyaans'));
-    }
-
-    public function simpanForm(Request $request, $siswaId)
-    {
-        $siswa = Siswa::findOrFail($siswaId);
-
-        foreach ($request->jawaban as $pertanyaanId => $jawabanId) {
-            HasilKuisioner::updateOrCreate(
-                [
-                    'siswa_id' => $siswa->id,
-                    'pertanyaan_id' => $pertanyaanId,
-                ],
-                [
-                    'jawaban_id' => $jawabanId,
-                ]
-            );
-        }
-
-        return redirect()->route('kuisioner.hasil', $siswa->id)
-            ->with('success', 'Kuisioner berhasil disimpan');
-    }
-
-    public function hasil($siswaId)
-    {
-        $siswa = Siswa::findOrFail($siswaId);
-        $hasil = HasilKuisioner::with('pertanyaan.kriteria','jawaban.alternatif')
-                    ->where('siswa_id',$siswaId)->get();
-
-        return view('operator.kuisioner.hasil', compact('siswa','hasil'));
-    }
-
      // Tampilkan daftar siswa
     public function indexPerbandinganAlternatif()
     {
@@ -666,61 +539,60 @@ public function showSiswa($id)
 
 
     // Simpan hasil perbandingan alternatif
-    public function storePerbandinganAlternatif(Request $request, $siswa_id)
-    {
-        $siswa = Siswa::findOrFail($siswa_id);
-        $alternatifs = Alternatif::all();
-        $kriteria_id = $request->input('kriteria_id');
+   public function storePerbandinganAlternatif(Request $request, $siswa_id)
+{
+    $siswa = Siswa::findOrFail($siswa_id);
 
-        $request->validate([
-            'kriteria_id' => 'required|exists:kriterias,id',
-        ]);
+    // Pastikan ada data nilai
+    if (!$request->has('nilai')) {
+        return back()->with('error', 'Tidak ada data perbandingan yang dikirim.');
+    }
 
-        // Hapus perbandingan lama untuk siswa & kriteria ini
-        PerbandinganAlternatif::where('siswa_id', $siswa_id)
-            ->where('kriteria_id', $kriteria_id)
-            ->delete();
+    foreach ($request->nilai as $kriteria_id => $alt1s) {
+        foreach ($alt1s as $alt1_id => $alt2s) {
+            foreach ($alt2s as $alt2_id => $nilai) {
+                // ambil tambahan data
+                $pilihan = $request->pilihan[$kriteria_id][$alt1_id][$alt2_id] ?? null;
+                $alasan  = $request->alasan[$kriteria_id][$alt1_id][$alt2_id] ?? null;
 
-        // Loop semua pasangan alternatif (i < j)
-        foreach ($alternatifs as $i => $alt1) {
-            foreach ($alternatifs as $j => $alt2) {
-                if ($i < $j) {
-                    $nilai = $request->input("alternatif_{$alt1->id}_vs_{$alt2->id}", 1);
+                // hapus dulu data lama agar tidak dobel
+                PerbandinganAlternatif::where('siswa_id', $siswa_id)
+                    ->where('kriteria_id', $kriteria_id)
+                    ->where('alternatif1_id', $alt1_id)
+                    ->where('alternatif2_id', $alt2_id)
+                    ->delete();
 
-                    // Ambil pilihan dari input radio
-                    $pilihan = $request->input("pilihan_{$alt1->id}_vs_{$alt2->id}", $alt1->id);
+                // simpan arah normal
+                PerbandinganAlternatif::create([
+                    'siswa_id'       => $siswa_id,
+                    'kriteria_id'    => $kriteria_id,
+                    'alternatif1_id' => $alt1_id,
+                    'alternatif2_id' => $alt2_id,
+                    'nilai'          => $nilai,
+                    'pilihan'        => $pilihan,
+                    'alasan'         => $alasan,
+                ]);
 
-                    // Ambil alasan dari input text
-                    $alasan = $request->input("alasan_{$alt1->id}_vs_{$alt2->id}");
-
-                    // Simpan arah normal
-                    PerbandinganAlternatif::create([
-                        'siswa_id'       => $siswa_id,
-                        'kriteria_id'    => $kriteria_id,
-                        'alternatif1_id' => $alt1->id,
-                        'alternatif2_id' => $alt2->id,
-                        'pilihan'        => $pilihan,
-                        'nilai'          => $nilai,
-                        'alasan'         => $alasan,
-                    ]);
-
-                    // Simpan arah kebalikan
-                    PerbandinganAlternatif::create([
-                        'siswa_id'       => $siswa_id,
-                        'kriteria_id'    => $kriteria_id,
-                        'alternatif1_id' => $alt2->id,
-                        'alternatif2_id' => $alt1->id,
-                        'pilihan'        => ($pilihan == $alt1->id) ? $alt2->id : $alt1->id,
-                        'nilai'          => 1 / $nilai,
-                        'alasan'         => $alasan,
-                    ]);
-                }
+                // simpan arah kebalikan
+                PerbandinganAlternatif::create([
+                    'siswa_id'       => $siswa_id,
+                    'kriteria_id'    => $kriteria_id,
+                    'alternatif1_id' => $alt2_id,
+                    'alternatif2_id' => $alt1_id,
+                    'nilai'          => (is_numeric($nilai) && $nilai != 0) ? 1 / $nilai : 0,
+                    'pilihan'        => ($pilihan == $alt1_id) ? $alt2_id : $alt1_id,
+                    'alasan'         => $alasan,
+                ]);
             }
         }
-
-        return redirect()->route('perbandingan_alternatif.create', $siswa_id)
-            ->with('success', 'Perbandingan alternatif berhasil disimpan!');
     }
+
+   return redirect()->route('perbandingan_alternatif.show', $siswa_id)
+    ->with('success', 'Perbandingan alternatif berhasil disimpan!');
+
+
+}
+
 
     // Lihat semua perbandingan alternatif + hitung bobot AHP
     public function showPerbandinganAlternatif($siswa_id)
@@ -996,7 +868,9 @@ public function cetakPdfHasilSiswa()
         'siswaPerAlternatif', 'alternatifs'
     ));
 
-    return $pdf->download('hasil_perbandingan_siswa.pdf');
+   return response($pdf->stream('hasil_perbandingan_siswa.pdf'))
+        ->header('Content-Type', 'application/pdf');
+
 }
 
 public function cetakPerbandingan($siswa_id)

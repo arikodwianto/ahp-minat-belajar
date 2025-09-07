@@ -44,7 +44,7 @@
 
                 <!-- Tombol Aksi -->
                 <div class="d-flex flex-column flex-md-row gap-2 ms-auto">
-                    <a href="{{ route('profile.edit') }}" class="btn btn-primary btn-lg px-4">
+                    <a href="{{ route('guru.profile.edit') }}" class="btn btn-primary btn-lg px-4">
                         <i class="bi bi-person-lines-fill me-2"></i> Lihat Profil
                     </a>
 
@@ -62,74 +62,54 @@
 </div>
 
             <!-- Statistik -->
-            <div class="row g-3">
-                <!-- Card 1 -->
-                <div class="col-lg-3 col-6">
-                    <div class="small-box text-bg-primary shadow rounded">
-                        <div class="inner">
-                            <h3>150</h3>
-                            <p>New Orders</p>
-                        </div>
-                        <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c..."></path>
-                        </svg>
-                        <a href="#" class="small-box-footer link-light">
-                            More info <i class="bi bi-link-45deg"></i>
-                        </a>
-                    </div>
-                </div>
+           <div class="row g-3">
+    <!-- Guru -->
+    
 
-                <!-- Card 2 -->
-                <div class="col-lg-3 col-6">
-                    <div class="small-box text-bg-success shadow rounded">
-                        <div class="inner">
-                            <h3>53<sup class="fs-5">%</sup></h3>
-                            <p>Bounce Rate</p>
-                        </div>
-                        <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M18.375 2.25c-1.035 0-1.875.84..."></path>
-                        </svg>
-                        <a href="#" class="small-box-footer link-light">
-                            More info <i class="bi bi-link-45deg"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="col-lg-3 col-6">
-                    <div class="small-box text-bg-warning shadow rounded">
-                        <div class="inner">
-                            <h3>44</h3>
-                            <p>User Registrations</p>
-                        </div>
-                        <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M6.25 6.375a4.125 4.125 0 118.25..."></path>
-                        </svg>
-                        <a href="#" class="small-box-footer link-dark">
-                            More info <i class="bi bi-link-45deg"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="col-lg-3 col-6">
-                    <div class="small-box text-bg-danger shadow rounded">
-                        <div class="inner">
-                            <h3>65</h3>
-                            <p>Unique Visitors</p>
-                        </div>
-                        <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24">
-                            <path clip-rule="evenodd" fill-rule="evenodd" d="M2.25 13.5a8.25..."></path>
-                            <path clip-rule="evenodd" fill-rule="evenodd" d="M12.75 3a.75..."></path>
-                        </svg>
-                        <a href="#" class="small-box-footer link-light">
-                            More info <i class="bi bi-link-45deg"></i>
-                        </a>
-                    </div>
-                </div>
+    <!-- Siswa -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box text-bg-success shadow rounded">
+            <div class="inner">
+                <h3>{{ $jumlahSiswa }}</h3>
+                <p>Jumlah Siswa</p>
             </div>
-
+            <i class="bi bi-people-fill small-box-icon"></i>
+            <a href="{{ route('operator.siswa.index') }}" class="small-box-footer link-light">
+                Lihat Detail <i class="bi bi-arrow-right-circle"></i>
+            </a>
         </div>
     </div>
+
+   
+
+    <!-- Kriteria -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box text-bg-danger shadow rounded">
+            <div class="inner">
+                <h3>{{ $jumlahKriteria }}</h3>
+                <p>Jumlah Kriteria</p>
+            </div>
+            <i class="bi bi-list-check small-box-icon"></i>
+            <a href="{{ route('operator.kriteria.index') }}" class="small-box-footer link-light">
+                Lihat Detail <i class="bi bi-arrow-right-circle"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Alternatif -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box text-bg-info shadow rounded">
+            <div class="inner">
+                <h3>{{ $jumlahAlternatif }}</h3>
+                <p>Jumlah Alternatif</p>
+            </div>
+            <i class="bi bi-shuffle small-box-icon"></i>
+            <a href="{{ route('perbandingan_alternatif.hasil-siswa') }}" class="small-box-footer link-light">
+                Lihat Detail <i class="bi bi-arrow-right-circle"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
 </main>
 @endsection
