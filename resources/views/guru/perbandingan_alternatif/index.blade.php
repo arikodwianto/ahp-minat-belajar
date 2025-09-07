@@ -49,10 +49,10 @@
                                             <td>{{ $siswa->nis }}</td>
                                             <td>{{ $siswa->kelas->nama_kelas ?? '-' }} @if(isset($siswa->kelas->jurusan)) ({{ $siswa->kelas->jurusan }}) @endif</td>
                                             <td class="text-center">
-                                                <a href="{{ route('perbandingan_alternatif.create', $siswa->id) }}" class="btn btn-primary btn-sm mb-1">
+                                                <a href="{{ route('guru.perbandingan_alternatif.create', $siswa->id) }}" class="btn btn-primary btn-sm mb-1">
                                                     <i class="bi bi-pencil-square me-1"></i> Input Perbandingan
                                                 </a>
-                                                <a href="{{ route('perbandingan_alternatif.show', $siswa->id) }}" class="btn btn-success btn-sm mb-1">
+                                                <a href="{{ route('guru.perbandingan_alternatif.show', $siswa->id) }}" class="btn btn-success btn-sm mb-1">
                                                     <i class="bi bi-eye me-1"></i> Lihat Hasil
                                                 </a>
                                             </td>

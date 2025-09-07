@@ -206,16 +206,13 @@ Route::prefix('guru')->name('guru.')->middleware(['auth', 'role:guru'])->group(f
     Route::get('/kriteria', [GuruController::class, 'indexKriteria'])->name('kriteria.index');
 
     // Perbandingan Alternatif
-    Route::get('/perbandingan-alternatif', [GuruController::class, 'indexPerbandinganAlternatif'])
-        ->name('perbandingan_alternatif.index');
-    Route::get('/perbandingan-alternatif/create/{siswa_id}', [GuruController::class, 'createPerbandinganAlternatif'])
-        ->name('perbandingan_alternatif.create');
-    Route::post('/perbandingan-alternatif/store/{siswa_id}', [GuruController::class, 'storePerbandinganAlternatif'])
-        ->name('perbandingan_alternatif.store');
-    Route::get('/perbandingan-alternatif/show/{siswa_id}', [GuruController::class, 'showPerbandinganAlternatif'])
-        ->name('perbandingan_alternatif.show');
-    Route::get('/perbandingan-alternatif/cetak/{siswa_id}', [GuruController::class, 'cetakPerbandingan'])
-        ->name('perbandingan_alternatif.cetak');
+    Route::prefix('perbandingan-alternatif')->name('perbandingan_alternatif.')->group(function () {
+        Route::get('/', [GuruController::class, 'indexPerbandinganAlternatif'])->name('index');
+        Route::get('/create/{siswa_id}', [GuruController::class, 'createPerbandinganAlternatif'])->name('create');
+        Route::post('/store/{siswa_id}', [GuruController::class, 'storePerbandinganAlternatif'])->name('store');
+        Route::get('/show/{siswa_id}', [GuruController::class, 'showPerbandinganAlternatif'])->name('show');
+        Route::get('/cetak/{siswa_id}', [GuruController::class, 'cetakPerbandingan'])->name('cetak');
+    });
 
 });
 
