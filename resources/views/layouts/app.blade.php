@@ -3,7 +3,7 @@
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Operator</title>
+    <title>Sistem Personalisasi Pembelajaran</title>
 
     <!--begin::Accessibility Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
@@ -22,6 +22,8 @@
 
     <!--begin::Preload AdminLTE CSS-->
     <link rel="preload" href="{{ asset('lte/dist/css/adminlte.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="icon" href="{{ asset('logo/Lambang_Kota_Tanjungpinang.png') }}" type="image/x-icon">
+
     <noscript>
         <link rel="stylesheet" href="{{ asset('lte/dist/css/adminlte.css') }}">
     </noscript>

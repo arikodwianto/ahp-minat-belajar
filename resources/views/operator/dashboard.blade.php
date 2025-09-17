@@ -64,76 +64,79 @@
         </div>
     </div>
 </div>
+<div class="row mb-4">
+    <div class="col-12">
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#statistikCollapse" aria-expanded="false" aria-controls="statistikCollapse">
+            Tampilkan Statistik
+        </button>
 
-           <!-- Statistik -->
-<div class="row g-3">
-    <!-- Guru -->
-    <div class="col-lg-3 col-6">
-        <div class="small-box text-bg-primary shadow rounded">
-            <div class="inner">
-                <h3>{{ $jumlahGuru }}</h3>
-                <p>Jumlah Guru</p>
-            </div>
-            <i class="bi bi-mortarboard-fill small-box-icon"></i>
-            <a href="{{ route('operator.guru.index') }}" class="small-box-footer link-light">
-                Lihat Detail <i class="bi bi-arrow-right-circle"></i>
-            </a>
-        </div>
-    </div>
+        <div class="collapse mt-3" id="statistikCollapse">
+            <div class="row g-3">
+                <div class="col-lg-3 col-6">
+                    <div class="small-box text-bg-primary shadow rounded">
+                        <div class="inner">
+                            <h3>{{ $jumlahGuru }}</h3>
+                            <p>Jumlah Guru</p>
+                        </div>
+                        <i class="bi bi-mortarboard-fill small-box-icon"></i>
+                        <a href="{{ route('operator.guru.index') }}" class="small-box-footer link-light">
+                            Lihat Detail <i class="bi bi-arrow-right-circle"></i>
+                        </a>
+                    </div>
+                </div>
 
-    <!-- Siswa -->
-    <div class="col-lg-3 col-6">
-        <div class="small-box text-bg-success shadow rounded">
-            <div class="inner">
-                <h3>{{ $jumlahSiswa }}</h3>
-                <p>Jumlah Siswa</p>
-            </div>
-            <i class="bi bi-people-fill small-box-icon"></i>
-            <a href="{{ route('operator.siswa.index') }}" class="small-box-footer link-light">
-                Lihat Detail <i class="bi bi-arrow-right-circle"></i>
-            </a>
-        </div>
-    </div>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box text-bg-success shadow rounded">
+                        <div class="inner">
+                            <h3>{{ $jumlahSiswa }}</h3>
+                            <p>Jumlah Siswa</p>
+                        </div>
+                        <i class="bi bi-people-fill small-box-icon"></i>
+                        <a href="{{ route('operator.siswa.index') }}" class="small-box-footer link-light">
+                            Lihat Detail <i class="bi bi-arrow-right-circle"></i>
+                        </a>
+                    </div>
+                </div>
 
-    <!-- Kelas -->
-    <div class="col-lg-3 col-6">
-        <div class="small-box text-bg-warning shadow rounded">
-            <div class="inner">
-                <h3>{{ $jumlahKelas }}</h3>
-                <p>Jumlah Kelas</p>
-            </div>
-            <i class="bi bi-door-open-fill small-box-icon"></i>
-            <a href="{{ route('operator.kelas.index') }}" class="small-box-footer link-dark">
-                Lihat Detail <i class="bi bi-arrow-right-circle"></i>
-            </a>
-        </div>
-    </div>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box text-bg-warning shadow rounded">
+                        <div class="inner">
+                            <h3>{{ $jumlahKelas }}</h3>
+                            <p>Jumlah Kelas</p>
+                        </div>
+                        <i class="bi bi-door-open-fill small-box-icon"></i>
+                        <a href="{{ route('operator.kelas.index') }}" class="small-box-footer link-dark">
+                            Lihat Detail <i class="bi bi-arrow-right-circle"></i>
+                        </a>
+                    </div>
+                </div>
 
-    <!-- Kriteria -->
-    <div class="col-lg-3 col-6">
-        <div class="small-box text-bg-danger shadow rounded">
-            <div class="inner">
-                <h3>{{ $jumlahKriteria }}</h3>
-                <p>Jumlah Kriteria</p>
-            </div>
-            <i class="bi bi-list-check small-box-icon"></i>
-            <a href="{{ route('operator.kriteria.index') }}" class="small-box-footer link-light">
-                Lihat Detail <i class="bi bi-arrow-right-circle"></i>
-            </a>
-        </div>
-    </div>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box text-bg-danger shadow rounded">
+                        <div class="inner">
+                            <h3>{{ $jumlahKriteria }}</h3>
+                            <p>Jumlah Kriteria</p>
+                        </div>
+                        <i class="bi bi-list-check small-box-icon"></i>
+                        <a href="{{ route('operator.kriteria.index') }}" class="small-box-footer link-light">
+                            Lihat Detail <i class="bi bi-arrow-right-circle"></i>
+                        </a>
+                    </div>
+                </div>
 
-    <!-- Alternatif -->
-    <div class="col-lg-3 col-6">
-        <div class="small-box text-bg-info shadow rounded">
-            <div class="inner">
-                <h3>{{ $jumlahAlternatif }}</h3>
-                <p>Jumlah Alternatif</p>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box text-bg-info shadow rounded">
+                        <div class="inner">
+                            <h3>{{ $jumlahAlternatif }}</h3>
+                            <p>Jumlah Alternatif</p>
+                        </div>
+                        <i class="bi bi-shuffle small-box-icon"></i>
+                        <a href="{{ route('perbandingan_alternatif.hasil-siswa') }}" class="small-box-footer link-light">
+                            Lihat Detail <i class="bi bi-arrow-right-circle"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
-            <i class="bi bi-shuffle small-box-icon"></i>
-            <a href="{{ route('perbandingan_alternatif.hasil-siswa') }}" class="small-box-footer link-light">
-                Lihat Detail <i class="bi bi-arrow-right-circle"></i>
-            </a>
         </div>
     </div>
 </div>
