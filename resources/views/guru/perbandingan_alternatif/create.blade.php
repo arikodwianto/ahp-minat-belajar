@@ -38,7 +38,7 @@
                     <h4 class="mb-0"><i class="bi bi-graph-up me-2"></i> Form Perbandingan Alternatif</h4>
                 </div>
                 <div class="card-body p-4">
-                    <form action="{{ route('perbandingan_alternatif.store', $siswa->id) }}" method="POST">
+                    <form action="{{ route('guru.perbandingan_alternatif.store', $siswa->id) }}" method="POST">
                         @csrf
 
                         @foreach($kriterias as $kriteria)
@@ -107,7 +107,7 @@
 
                         <!-- Button Submit dan Kembali -->
                         <div class="mt-4 d-flex justify-content-end gap-2">
-                            <a href="{{ route('perbandingan_alternatif.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('guru.perbandingan_alternatif.index') }}" class="btn btn-secondary">
                                 <i class="bi bi-arrow-left me-1"></i> Kembali
                             </a>
                             <button type="submit" class="btn btn-primary">

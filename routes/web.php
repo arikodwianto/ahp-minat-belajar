@@ -105,40 +105,6 @@ Route::post('/operator/kelas/store', [OperatorController::class, 'storeKelas'])-
 Route::get('/operator/kelas/edit/{id}', [OperatorController::class, 'editKelas'])->name('operator.kelas.edit');
 Route::put('/operator/kelas/update/{id}', [OperatorController::class, 'updateKelas'])->name('operator.kelas.update');
 Route::delete('/operator/kelas/delete/{id}', [OperatorController::class, 'destroyKelas'])->name('operator.kelas.destroy');
-
-
-
-    
-   
-
-    // Pertanyaan
-    Route::prefix('pertanyaan')->name('pertanyaan.')->group(function () {
-        Route::get('/', [OperatorController::class, 'indexPertanyaan'])->name('index');
-        Route::get('/create', [OperatorController::class, 'createPertanyaan'])->name('create');
-        Route::post('/', [OperatorController::class, 'storePertanyaan'])->name('store');
-        Route::get('/{id}/edit', [OperatorController::class, 'editPertanyaan'])->name('edit');
-        Route::put('/{id}', [OperatorController::class, 'updatePertanyaan'])->name('update');
-        Route::delete('/{id}', [OperatorController::class, 'destroyPertanyaan'])->name('destroy');
-    });
-
-    // Jawaban
-    Route::prefix('jawaban')->name('jawaban.')->group(function () {
-        Route::get('/', [OperatorController::class, 'indexJawaban'])->name('index');
-        Route::get('/create', [OperatorController::class, 'createJawaban'])->name('create');
-        Route::post('/', [OperatorController::class, 'storeJawaban'])->name('store');
-        Route::get('/{id}/edit', [OperatorController::class, 'editJawaban'])->name('edit');
-        Route::put('/{id}', [OperatorController::class, 'updateJawaban'])->name('update');
-        Route::delete('/{id}', [OperatorController::class, 'destroyJawaban'])->name('destroy');
-    });
-
-    // Form Kuisioner siswa
-    Route::get('/siswa/{siswaId}/kuisioner', [OperatorController::class, 'isiForm'])->name('kuisioner.isi');
-    Route::post('/siswa/{siswaId}/kuisioner', [OperatorController::class, 'simpanForm'])->name('kuisioner.simpan');
-
-    // Hasil Kuisioner
-    Route::get('/kuisioner', [OperatorController::class, 'index'])->name('kuisioner.index');
-    Route::post('/kuisioner', [OperatorController::class, 'store'])->name('kuisioner.store');
-    Route::get('/kuisioner/hasil', [OperatorController::class, 'hasil'])->name('kuisioner.hasil');
 });
  Route::prefix('alternatif')->name('alternatif.')->group(function () {
         Route::get('/', [OperatorController::class, 'indexAlternatif'])->name('index');

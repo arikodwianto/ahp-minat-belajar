@@ -178,7 +178,7 @@ public function indexPerbandinganAlternatif()
         }
     }
 
-   return redirect()->route('guru.perbandingan_alternatif.show', $siswa_id)
+   return redirect()->route('guru.perbandingan_alternatif.index', $siswa_id)
     ->with('success', 'Perbandingan alternatif berhasil disimpan!');
 
 
