@@ -57,29 +57,44 @@
 
                             @if(count($siswas) > 0)
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover align-middle">
-                                         <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama</th>
-                                        <th>NIS</th>
-                                        <th>Jenis Kelamin</th>
-                                        <th>Kelas</th>
-                                       
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($siswas as $index => $siswa)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                       <td>{{ $siswa->nama }}</td>
-                                            <td>{{ $siswa->nis }}</td>
-                                            <td>{{ $siswa->jenis_kelamin }}</td>
-                                            <td>{{ $siswa->kelas->nama_kelas ?? '-' }} @if(isset($siswa->kelas->jurusan)) ({{ $siswa->kelas->jurusan }}) @endif</td>
-                                           
+                                 <table class="table table-bordered table-striped table-hover align-middle">
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Nama</th>
+            <th>NIS</th>
+            <th>Jenis Kelamin</th>
+            <th>Kelas</th>
+            @foreach($alternatifs as $alt)
+                <th>{{ $alt->nama }}</th>
+            @endforeach
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($siswas as $index => $siswa)
+            <tr>
+                <td>{{ $index + 1 }}</td>
+                <td>{{ $siswa->nama }}</td>
+                <td>{{ $siswa->nis }}</td>
+                <td>{{ $siswa->jenis_kelamin }}</td>
+                <td>
+                    {{ $siswa->kelas->nama_kelas ?? '-' }} 
+                    @if(isset($siswa->kelas->jurusan)) 
+                        ({{ $siswa->kelas->jurusan }}) 
+                    @endif
+                </td>
+                @foreach($alternatifs as $alt)
+                    <td>
+                        {{ isset($nilaiPerSiswa[$siswa->id][$alt->id]) 
+                            ? number_format($nilaiPerSiswa[$siswa->id][$alt->id], 4) 
+                            : '-' }}
+                    </td>
                 @endforeach
-            </tbody>
-                                    </table>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+
                                 </div>
                             @else
                                 <p class="text-muted fst-italic">

@@ -43,20 +43,24 @@
     <p><strong>Tanggal Cetak:</strong> {{ date('d-m-Y') }}</p>
 
     <!-- DATA PER ALTERNATIF -->
-    @foreach($siswaPerAlternatif as $alternatif => $siswas)
-        <h4 class="alternatif-title">Alternatif: {{ $alternatif }}</h4>
-        <table>
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>NIS</th>
-                    <th>Jenis Kelamin</th>
-                    <th>Kelas</th>
-                  
-                </tr>
-            </thead>
-            <tbody>
+@foreach($siswaPerAlternatif as $alternatif => $siswas)
+    <h4 class="alternatif-title">Alternatif: {{ $alternatif }}</h4>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>NIS</th>
+                <th>Jenis Kelamin</th>
+                <th>Kelas</th>
+                @foreach($alternatifs as $alt)
+                    <th>{{ $alt->nama }}</th>
+                @endforeach
+            </tr>
+        </thead>
+        <tbody>
+            @if(count($siswas) > 0)
                 @foreach($siswas as $index => $siswa)
                     <tr>
                         <td>{{ $index + 1 }}</td>
@@ -67,12 +71,27 @@
                             {{ $siswa->kelas->nama_kelas ?? '-' }}
                             @if(isset($siswa->kelas->jurusan)) ({{ $siswa->kelas->jurusan }}) @endif
                         </td>
-                       
+
+                        {{-- tampilkan nilai bobot per alternatif --}}
+                        @foreach($alternatifs as $alt)
+                            <td>
+                                {{ number_format($nilaiPerSiswa[$siswa->id][$alt->id] ?? 0, 4) }}
+                            </td>
+                        @endforeach
+                        
                     </tr>
                 @endforeach
-            </tbody>
-        </table>
-    @endforeach
+            @else
+                <tr>
+                    <td colspan="{{ 5 + $alternatifs->count() }}" class="text-center text-muted fst-italic">
+                        Belum ada siswa yang sesuai dengan alternatif ini.
+                    </td>
+                </tr>
+            @endif
+        </tbody>
+    </table>
+@endforeach
+
 
     <!-- TANDA TANGAN -->
     <div class="ttd">

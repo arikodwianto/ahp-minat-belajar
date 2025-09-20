@@ -689,18 +689,20 @@ $CR = ($RI != 0) ? $CI / $RI : 0;
         ));
     }
 
-    public function indexHasilSiswa()
+ public function indexHasilSiswa()
 {
     $siswas = Siswa::all();
     $kriterias = Kriteria::all();
     $alternatifs = Alternatif::all();
 
-    $siswaPerAlternatif = []; // array hasil pengelompokan siswa
-    $totalScoreAll = [];      // array untuk diagram
+    // Inisialisasi: semua alternatif ada, meskipun kosong
+    $siswaPerAlternatif = [];
+    foreach ($alternatifs as $alt) {
+        $siswaPerAlternatif[$alt->nama] = [];
+    }
 
-    // Inisialisasi chart
-    $chartLabels = $alternatifs->pluck('nama')->toArray();
-    $chartData = array_fill(0, count($chartLabels), 0);
+    $totalScoreAll = []; // untuk chart
+    $nilaiPerSiswa = []; // semua bobot alternatif per siswa
 
     foreach ($siswas as $siswa) {
         $perbandingans = PerbandinganAlternatif::where('siswa_id', $siswa->id)->get();
@@ -708,20 +710,18 @@ $CR = ($RI != 0) ? $CI / $RI : 0;
 
         foreach ($kriterias as $kriteria) {
             $n = $alternatifs->count();
-            if ($n == 0) continue; // jika tidak ada alternatif, skip
+            if ($n == 0) continue;
 
-            // Inisialisasi matriks simetris
+            // inisialisasi matrix
             $matrix = [];
             foreach ($alternatifs as $i) {
                 foreach ($alternatifs as $j) {
-                    $matrix[$i->id][$j->id] = ($i->id === $j->id) ? 1 : 0.01; // default 0.01 untuk menghindari null
+                    $matrix[$i->id][$j->id] = ($i->id === $j->id) ? 1 : 0.01;
                 }
             }
 
-            // Isi matriks dari perbandingan
             $perbandinganKriteria = $perbandingans->where('kriteria_id', $kriteria->id);
             if ($perbandinganKriteria->count() == 0) {
-                // jika tidak ada perbandingan, set semua bobot sama rata
                 $geomMeans = array_fill(0, $n, 1);
             } else {
                 foreach ($perbandinganKriteria as $p) {
@@ -738,16 +738,15 @@ $CR = ($RI != 0) ? $CI / $RI : 0;
                     }
                 }
 
-                // Hitung geometric mean
+                // hitung geometric mean
                 $geomMeans = [];
                 foreach ($matrix as $i_id => $row) {
                     $geomMeans[] = pow(array_product($row), 1 / $n);
                 }
             }
 
-            // Bobot alternatif
             $sumGeom = array_sum($geomMeans);
-            if ($sumGeom == 0) $sumGeom = 0.0001; // aman dari division by zero
+            if ($sumGeom == 0) $sumGeom = 0.0001;
 
             foreach ($alternatifs as $index => $alt) {
                 $bobot = $geomMeans[$index] / $sumGeom;
@@ -758,8 +757,11 @@ $CR = ($RI != 0) ? $CI / $RI : 0;
             }
         }
 
-        // Tentukan alternatif terbaik
         if (!empty($totalScoreAlternatif)) {
+            // simpan nilai semua alternatif per siswa
+            $nilaiPerSiswa[$siswa->id] = $totalScoreAlternatif;
+
+            // cari alternatif terbaik
             $maxScore = max($totalScoreAlternatif);
             $alternatifTerbaikId = array_search($maxScore, $totalScoreAlternatif);
             $alternatifTerbaik = Alternatif::find($alternatifTerbaikId);
@@ -767,7 +769,8 @@ $CR = ($RI != 0) ? $CI / $RI : 0;
             if ($alternatifTerbaik) {
                 $siswaPerAlternatif[$alternatifTerbaik->nama][] = $siswa;
             }
-            // Simpan untuk diagram
+
+            // simpan total untuk chart
             foreach ($totalScoreAlternatif as $altId => $score) {
                 if (!isset($totalScoreAll[$altId])) {
                     $totalScoreAll[$altId] = 0;
@@ -776,7 +779,8 @@ $CR = ($RI != 0) ? $CI / $RI : 0;
             }
         }
     }
-    // Hanya ambil alternatif yang memiliki skor > 0
+
+    // Chart hanya untuk alternatif dengan skor > 0
     $chartLabels = [];
     $chartData = [];
     foreach ($totalScoreAll as $altId => $score) {
@@ -786,10 +790,12 @@ $CR = ($RI != 0) ? $CI / $RI : 0;
             $chartData[] = $score;
         }
     }
+
     return view('operator.perbandingan_alternatif.hasil_semua', compact(
-        'siswaPerAlternatif', 'alternatifs', 'chartLabels', 'chartData'
+        'siswas', 'siswaPerAlternatif', 'nilaiPerSiswa', 'alternatifs', 'chartLabels', 'chartData'
     ));
 }
+
 
     // Cetak PDF hasil perbandingan alternatif untuk satu siswa
 
@@ -800,7 +806,11 @@ public function cetakPdfHasilSiswa()
     $kriterias = Kriteria::all();
     $alternatifs = Alternatif::all();
 
+    // Inisialisasi: semua alternatif ada, walaupun kosong
     $siswaPerAlternatif = [];
+    foreach ($alternatifs as $alt) {
+        $siswaPerAlternatif[$alt->nama] = [];
+    }
 
     foreach ($siswas as $siswa) {
         $perbandingans = PerbandinganAlternatif::where('siswa_id', $siswa->id)->get();
@@ -868,10 +878,10 @@ public function cetakPdfHasilSiswa()
         'siswaPerAlternatif', 'alternatifs'
     ));
 
-   return response($pdf->stream('hasil_perbandingan_siswa.pdf'))
+    return response($pdf->stream('hasil_perbandingan_siswa.pdf'))
         ->header('Content-Type', 'application/pdf');
-
 }
+
 
 public function cetakPerbandingan($siswa_id)
 {
